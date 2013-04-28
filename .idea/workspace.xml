@@ -16,6 +16,7 @@
     <file path="/tests.coffee" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1364989675196" ignored="false" />
     <file path="/tests.js" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1364989152116" ignored="false" />
     <file path="/test.html" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1364990664201" ignored="false" />
+    <file path="/Dummy.txt" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1367140221982" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,7 +50,7 @@
       <file leaf-file-name="server.coffee" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/server.coffee">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="36" column="4" selection-start="798" selection-end="798" vertical-scroll-proportion="0.76131046">
+            <state line="13" column="66" selection-start="317" selection-end="317" vertical-scroll-proportion="0.37842464">
               <folding />
             </state>
           </provider>
@@ -68,7 +69,9 @@
         <entry file="file://$PROJECT_DIR$/js/client.coffee">
           <provider selected="true" editor-type-id="text-editor">
             <state line="50" column="25" selection-start="1532" selection-end="1532" vertical-scroll-proportion="0.0">
-              <folding />
+              <folding>
+                <marker date="1367137320547" expanded="true" signature="154:1934" placeholder="..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -86,6 +89,14 @@
     <FindUsagesManager>
       <setting name="OPEN_NEW_TAB" value="false" />
     </FindUsagesManager>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitLogSettings">
+    <option name="myDateState">
+      <MyDateState />
+    </option>
   </component>
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
@@ -115,7 +126,7 @@
     <option name="width" value="1593" />
     <option name="height" value="1066" />
   </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
     <OptionsSetting value="true" id="Remove" />
     <OptionsSetting value="true" id="Checkout" />
@@ -231,7 +242,7 @@
   <component name="PropertiesComponent">
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="options.lastSelected" value="settings" />
+    <property name="options.lastSelected" value="vcs.Git" />
     <property name="recentsLimit" value="5" />
     <property name="last_opened_file_path" value="$APPLICATION_HOME_DIR$/nodejs/node.exe" />
     <property name="restartRequiresConfirmation" value="false" />
@@ -312,17 +323,17 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1593" height="1066" extended-state="7" />
-    <editor active="true" />
+    <frame x="-8" y="-8" width="1593" height="1066" extended-state="6" />
+    <editor active="false" />
     <layout>
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32893288" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24967825" sideWeight="0.68976897" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16151866" sideWeight="0.7353914" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16151866" sideWeight="0.6710671" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.45543176" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23432343" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2646086" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2640264" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -474,7 +485,9 @@
     <entry file="file://$PROJECT_DIR$/js/client.coffee">
       <provider selected="true" editor-type-id="text-editor">
         <state line="50" column="25" selection-start="1532" selection-end="1532" vertical-scroll-proportion="0.0">
-          <folding />
+          <folding>
+            <marker date="1367137320547" expanded="true" signature="154:1934" placeholder="..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -487,7 +500,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/server.coffee">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="4" selection-start="798" selection-end="798" vertical-scroll-proportion="0.76131046">
+        <state line="13" column="66" selection-start="317" selection-end="317" vertical-scroll-proportion="0.37842464">
           <folding />
         </state>
       </provider>
