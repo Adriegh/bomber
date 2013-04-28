@@ -7,9 +7,11 @@
 
 
 (function() {
-  var Player, World;
+  var Block, Bomb, Player, World;
 
   Player = (function() {
+
+    Player.prototype.bombs = [];
 
     function Player(obj, x, y) {
       this.name = obj;
@@ -17,27 +19,60 @@
       this.y = y;
     }
 
+    Player.prototype.addBomb = function(b) {
+      return this.bombs.push(b);
+    };
+
+    Player.prototype.delBomb = function() {
+      return this.bombs.splice(0, 1);
+    };
+
     Player.prototype.BoundColX = function(posX) {
       if (posX > 1088) {
-        return posX - 12;
+        return posX - 8;
       }
       if (posX < 0) {
-        return posX + 12;
+        return posX + 8;
       }
       return posX;
     };
 
     Player.prototype.BoundColY = function(posY) {
       if (posY > 720) {
-        return posY - 8;
+        return posY - 12;
       }
       if (posY < 0) {
-        return posY + 8;
+        return posY + 12;
       }
       return posY;
     };
 
     return Player;
+
+  })();
+
+  Bomb = (function() {
+
+    function Bomb(type, box, boy, time) {
+      this.type = type;
+      this.x = box;
+      this.y = boy;
+      this.time = time;
+    }
+
+    return Bomb;
+
+  })();
+
+  Block = (function() {
+
+    function Block(material, blx, bly) {
+      this.type = material;
+      this.x = blx * 32;
+      this.y = bly * 48;
+    }
+
+    return Block;
 
   })();
 
@@ -47,9 +82,27 @@
 
     World.prototype.names = [];
 
+    World.prototype.mapTemp = [];
+
+    World.prototype.blocks = [];
+
+    World.prototype.mapTempW = 0;
+
+    World.prototype.mapTempH = 0;
+
+    World.prototype.addMapTemp = function(map, mW, mH) {
+      this.mapTemp = map;
+      this.mapTempW = mW;
+      return this.mapTempH = mH;
+    };
+
     World.prototype.addPlayer = function(pl) {
       this.players[pl.name] = pl;
       return this.names.push(pl.name);
+    };
+
+    World.prototype.addBlock = function(bl) {
+      return this.blocks.push(bl);
     };
 
     World.prototype.ExistCond = function(pl) {
@@ -66,10 +119,18 @@
         case 'object':
           this.players = obj.players;
           this.names = obj.names;
+          this.mapTemp = obj.mapTemp;
+          this.blocks = obj.blocks;
+          this.mapTempW = obj.mapTempW;
+          this.mapTempH = obj.mapTempH;
           break;
         default:
           this.players = [];
           this.names = [];
+          this.mapTemp = [];
+          this.blocks = [];
+          this.mapTempW = 0;
+          this.mapTempH = 0;
       }
     }
 
@@ -80,7 +141,9 @@
   if (typeof module !== "undefined" && module !== null) {
     module.exports = {
       Player: Player,
-      World: World
+      World: World,
+      Block: Block,
+      Bomb: Bomb
     };
   }
 
@@ -90,6 +153,14 @@
 
   if (typeof window !== "undefined" && window !== null) {
     window.World = World;
+  }
+
+  if (typeof window !== "undefined" && window !== null) {
+    window.Block = Block;
+  }
+
+  if (typeof window !== "undefined" && window !== null) {
+    window.Bomb = Bomb;
   }
 
 }).call(this);

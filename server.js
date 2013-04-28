@@ -7,7 +7,7 @@
 
 
 (function() {
-  var app, fs, gamemap, io, model;
+  var app, createBlocks, fs, gamemap, io, model, testmap, testmapH, testmapW;
 
   fs = require('fs');
 
@@ -36,7 +36,40 @@
 
   model = require('./js/model.js');
 
+  testmap = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 2, 0, 2, 2, 0, 2, 0, 1, 1, 2, 1, 0, 0, 0, 0, 1, 2, 1, 1, 2, 0, 1, 3, 3, 1, 0, 2, 1, 1, 2, 0, 1, 3, 3, 1, 0, 2, 1, 1, 2, 1, 0, 0, 0, 0, 1, 2, 1, 1, 0, 2, 0, 2, 2, 0, 2, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+
+  createBlocks = function(map) {
+    var block, type, x, y, _i, _len, _ref, _results;
+    x = 0;
+    y = 0;
+    _ref = map.mapTemp;
+    _results = [];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      type = _ref[_i];
+      if (type > 0) {
+        block = new model.Block(type, x, y);
+        map.addBlock(block);
+      }
+      x++;
+      if (x === map.mapTempW) {
+        y++;
+        _results.push(x = 0);
+      } else {
+        _results.push(void 0);
+      }
+    }
+    return _results;
+  };
+
+  testmapW = 10;
+
+  testmapH = 8;
+
   gamemap = new model.World();
+
+  gamemap.addMapTemp(testmap, testmapW, testmapH);
+
+  createBlocks(gamemap);
 
   io.sockets.on('connection', function(socket) {
     socket.on('new user', function(player) {

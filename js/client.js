@@ -11,23 +11,43 @@
 
   (function($) {
     return $(document).ready(function() {
-      var drawWorld, imgBack, imgSpr, me, movePl, mv, socket, usergamemap;
+      var drawWorld, imgBack, imgSpr, me, meb, medb, movePl, mv, socket, usergamemap;
       socket = io.connect(document.URL.match(/^http:\/\/[^/]*/));
       imgSpr = new Image();
       imgSpr.src = 'img\\spritesBeta.png';
       imgBack = new Image();
       imgBack.src = 'img\\backBeta.png';
       drawWorld = function(map) {
-        var canva, ctx, nam, _i, _len, _ref, _results;
+        var bl, bomb, canva, ctx, nam, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2, _results;
         canva = document.getElementById("canvas");
         ctx = canva.getContext("2d");
         ctx.drawImage(imgBack, 0, 0);
         ctx.font = "12px Arial";
         ctx.fillStyle = "black";
-        _ref = map.names;
-        _results = [];
+        _ref = map.blocks;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          nam = _ref[_i];
+          bl = _ref[_i];
+          if (bl.type === 1) {
+            ctx.drawImage(imgSpr, 0, 0, 32, 48, bl.x, bl.y, 32, 48);
+          }
+          if (bl.type === 2) {
+            ctx.drawImage(imgSpr, 34, 0, 32, 48, bl.x, bl.y, 32, 48);
+          }
+          if (bl.type === 3) {
+            ctx.drawImage(imgSpr, 68, 0, 32, 48, bl.x, bl.y, 32, 48);
+          }
+        }
+        _ref1 = map.names;
+        _results = [];
+        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+          nam = _ref1[_j];
+          _ref2 = map.players[nam].bombs;
+          for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
+            bomb = _ref2[_k];
+            if (bomb.type === 1) {
+              ctx.drawImage(imgSpr, 0, 50, 32, 48, bomb.x, bomb.y, 32, 48);
+            }
+          }
           ctx.drawImage(imgSpr, 102, 0, 32, 48, map.players[nam].x, map.players[nam].y, 32, 48);
           _results.push(ctx.fillText(map.players[nam].name, map.players[nam].x + 4, map.players[nam].y + 14));
         }
@@ -35,7 +55,9 @@
       };
       usergamemap = new World();
       mv = 0;
-      me = new Player("P" + (Math.ceil(Math.random() * 16)), Math.ceil(Math.random() * 10) * 12, Math.ceil(Math.random() * 10) * 8);
+      meb = 0;
+      medb = 0;
+      me = new Player("P" + (Math.ceil(Math.random() * 16)), Math.ceil(Math.random() * 10) * 8, Math.ceil(Math.random() * 10) * 12);
       socket.emit('new user', me);
       socket.on('add world', function(worldmap) {
         usergamemap = new World(worldmap);
@@ -54,13 +76,19 @@
       $("body").keydown(function(e) {
         switch (e.keyCode) {
           case 39:
-            return mv = 1;
+            mv = 1;
+            break;
           case 37:
-            return mv = 2;
+            mv = 2;
+            break;
           case 38:
-            return mv = 3;
+            mv = 3;
+            break;
           case 40:
-            return mv = 4;
+            mv = 4;
+        }
+        if (e.keyCode === 32) {
+          return meb = 1;
         }
       });
       $("body").keyup(function(e) {
@@ -69,16 +97,33 @@
         }
       });
       return movePl = function() {
+        var bmb, bomb, _i, _len, _ref;
         if (mv === 1) {
-          me.x = me.BoundColX(me.x + 12);
+          me.x = me.BoundColX(me.x + 8);
         } else if (mv === 2) {
-          me.x = me.BoundColX(me.x - 12);
+          me.x = me.BoundColX(me.x - 8);
         } else if (mv === 3) {
-          me.y = me.BoundColY(me.y - 8);
+          me.y = me.BoundColY(me.y - 12);
         } else if (mv === 4) {
-          me.y = me.BoundColY(me.y + 8);
+          me.y = me.BoundColY(me.y + 12);
         }
-        if (mv > 0) {
+        _ref = me.bombs;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          bmb = _ref[_i];
+          if (bmb.time > 0) {
+            bmb.time -= 1;
+          } else {
+            me.delBomb();
+            medb--;
+          }
+        }
+        if (meb === 1) {
+          bomb = new Bomb(meb, me.x, me.y, 30);
+          me.addBomb(bomb);
+          meb = 0;
+          medb++;
+        }
+        if (mv > 0 || meb > 0 || medb > 0) {
           socket.emit('update user', me);
           return drawWorld(usergamemap);
         }
