@@ -4,22 +4,42 @@
 
 class Player
   bombs : []
-  constructor: (obj, x, y) ->
-    @name = obj
-    @x = x
-    @y = y
+  constructor: (name, x, y ) ->
+    switch typeof name
+      when 'string'
+        @name = name
+        @x = x
+        @y = y
+      else
+        @name = ""
+        @x = 0
+        @y = 0
+        @bombs = []
   addBomb: (b) ->
     @bombs.push(b)
   delBomb: () ->
     @bombs.splice(0,1)
-  BoundColX: (posX) ->
-    if posX > 1088 then return posX-8
-    if posX < 0 then return posX+8
+  BoundColl: ( posX, posY, map) ->
+    XColl = false
+    YColl = false
+    for bl in map.blocks
+      if bl.x is Math.ceil(posX / 48)*48 and ( bl.y is Math.ceil(posY / 48)*48 or bl.y is (Math.ceil(posY / 48)-1)*48 )
+        if posX+48 > bl.x and posX < bl.x+48 then XColl = true
+        if posY+48 > bl.y and posY < bl.y+48 then YColl = true
+      if bl.x is Math.floor(posX / 48)*48 and ( bl.y is Math.ceil(posY / 48)*48 or bl.y is (Math.ceil(posY / 48)-1)*48 )
+        if posX < bl.x+48 and posX+48 > bl.x then XColl = true
+        if posY < bl.y+48 and posY+48 > bl.y then YColl = true
+    if (XColl and YColl) then return false
+    return true
+
+  ###BoundColX: (posX, map) ->
+    if posX > 960 then return posX-12
+    if posX < 0 then return posX+12
     return posX
-  BoundColY: (posY) ->
-    if posY > 720 then return posY-12
+  BoundColY: (posY, map) ->
+    if posY > 672 then return posY-12
     if posY < 0 then return posY+12
-    return posY
+    return posY###
 
 class Bomb
   constructor: (type, box, boy, time) ->
@@ -27,12 +47,23 @@ class Bomb
     @x = box
     @y = boy
     @time = time
+  BlockColl: ( bposX, bposY, map) ->
+    blow = []
+    for bl in map.blocks
+      if bl.type > 1
+        if bl.x is bposX and bl.y is bposY then blow.push(bl.id)
+        else if bl.x is bposX-48 and bl.y is bposY then blow.push(bl.id)
+        else if bl.x is bposX+48 and bl.y is bposY then blow.push(bl.id)
+        else if bl.y is bposY-48 and bl.x is bposX then blow.push(bl.id)
+        else if bl.y is bposY+48 and bl.x is bposX then blow.push(bl.id)
+    return blow
 
 class Block
-  constructor: (material, blx, bly) ->
+  constructor: (material, blx, bly, id) ->
     @type = material
-    @x = blx*32
+    @x = blx*48
     @y = bly*48
+    @id = id
 
 class World
   players : []
@@ -50,6 +81,11 @@ class World
     @names.push(pl.name)
   addBlock: (bl) ->
     @blocks.push(bl)
+  delBlock: (id) ->
+    @blocks[id].x = -48
+    @blocks[id].y = -48
+    @blocks[id].type = -1
+    @blocks[id].id = -1
   ExistCond: (pl) ->
     cond = false
     if @players[pl.name] is undefined then cond = true

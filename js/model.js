@@ -13,10 +13,19 @@
 
     Player.prototype.bombs = [];
 
-    function Player(obj, x, y) {
-      this.name = obj;
-      this.x = x;
-      this.y = y;
+    function Player(name, x, y) {
+      switch (typeof name) {
+        case 'string':
+          this.name = name;
+          this.x = x;
+          this.y = y;
+          break;
+        default:
+          this.name = "";
+          this.x = 0;
+          this.y = 0;
+          this.bombs = [];
+      }
     }
 
     Player.prototype.addBomb = function(b) {
@@ -27,25 +36,46 @@
       return this.bombs.splice(0, 1);
     };
 
-    Player.prototype.BoundColX = function(posX) {
-      if (posX > 1088) {
-        return posX - 8;
+    Player.prototype.BoundColl = function(posX, posY, map) {
+      var XColl, YColl, bl, _i, _len, _ref;
+      XColl = false;
+      YColl = false;
+      _ref = map.blocks;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        bl = _ref[_i];
+        if (bl.x === Math.ceil(posX / 48) * 48 && (bl.y === Math.ceil(posY / 48) * 48 || bl.y === (Math.ceil(posY / 48) - 1) * 48)) {
+          if (posX + 48 > bl.x && posX < bl.x + 48) {
+            XColl = true;
+          }
+          if (posY + 48 > bl.y && posY < bl.y + 48) {
+            YColl = true;
+          }
+        }
+        if (bl.x === Math.floor(posX / 48) * 48 && (bl.y === Math.ceil(posY / 48) * 48 || bl.y === (Math.ceil(posY / 48) - 1) * 48)) {
+          if (posX < bl.x + 48 && posX + 48 > bl.x) {
+            XColl = true;
+          }
+          if (posY < bl.y + 48 && posY + 48 > bl.y) {
+            YColl = true;
+          }
+        }
       }
-      if (posX < 0) {
-        return posX + 8;
+      if (XColl && YColl) {
+        return false;
       }
-      return posX;
+      return true;
     };
 
-    Player.prototype.BoundColY = function(posY) {
-      if (posY > 720) {
-        return posY - 12;
-      }
-      if (posY < 0) {
-        return posY + 12;
-      }
-      return posY;
-    };
+    /*BoundColX: (posX, map) ->
+      if posX > 960 then return posX-12
+      if posX < 0 then return posX+12
+      return posX
+    BoundColY: (posY, map) ->
+      if posY > 672 then return posY-12
+      if posY < 0 then return posY+12
+      return posY
+    */
+
 
     return Player;
 
@@ -60,16 +90,40 @@
       this.time = time;
     }
 
+    Bomb.prototype.BlockColl = function(bposX, bposY, map) {
+      var bl, blow, _i, _len, _ref;
+      blow = [];
+      _ref = map.blocks;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        bl = _ref[_i];
+        if (bl.type > 1) {
+          if (bl.x === bposX && bl.y === bposY) {
+            blow.push(bl.id);
+          } else if (bl.x === bposX - 48 && bl.y === bposY) {
+            blow.push(bl.id);
+          } else if (bl.x === bposX + 48 && bl.y === bposY) {
+            blow.push(bl.id);
+          } else if (bl.y === bposY - 48 && bl.x === bposX) {
+            blow.push(bl.id);
+          } else if (bl.y === bposY + 48 && bl.x === bposX) {
+            blow.push(bl.id);
+          }
+        }
+      }
+      return blow;
+    };
+
     return Bomb;
 
   })();
 
   Block = (function() {
 
-    function Block(material, blx, bly) {
+    function Block(material, blx, bly, id) {
       this.type = material;
-      this.x = blx * 32;
+      this.x = blx * 48;
       this.y = bly * 48;
+      this.id = id;
     }
 
     return Block;
@@ -103,6 +157,13 @@
 
     World.prototype.addBlock = function(bl) {
       return this.blocks.push(bl);
+    };
+
+    World.prototype.delBlock = function(id) {
+      this.blocks[id].x = -48;
+      this.blocks[id].y = -48;
+      this.blocks[id].type = -1;
+      return this.blocks[id].id = -1;
     };
 
     World.prototype.ExistCond = function(pl) {

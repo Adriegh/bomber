@@ -15,7 +15,7 @@ app = require('http').createServer (req, res) ->
       res.end data
   )
 io = require('socket.io').listen app
-app.listen 8080
+app.listen 12345
 ###
   END server r outine
 ###
@@ -23,34 +23,51 @@ app.listen 8080
 model = require('./js/model.js') # loading common model for game
 
 testmap = [
-            1,1,1,1,1,1,1,1,1,1
-            1,0,2,0,2,2,0,2,0,1
-            1,2,1,0,0,0,0,1,2,1
-            1,2,0,1,3,3,1,0,2,1
-            1,2,0,1,3,3,1,0,2,1
-            1,2,1,0,0,0,0,1,2,1
-            1,0,2,0,2,2,0,2,0,1
-            1,1,1,1,1,1,1,1,1,1
+            1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+            1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1
+            1,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,1
+            1,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,1
+            1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1
+            1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1
+            1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1
+            1,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0,1,1,1,1,1
+            1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1
+            1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1
+            1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1
+            1,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,1
+            1,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,1
+            1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1
+            1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
           ]
+
 createBlocks = (map) ->
   x = 0
   y = 0
+  id = 0
   for type in map.mapTemp
-    if type > 0
-      block = new model.Block(type, x, y)
+    if type is 1
+      block = new model.Block(type, x, y, id)
       map.addBlock(block)
+      id++
+    else if type is 0
+      z = Math.ceil(Math.random()*3)
+      if z > 1
+        block = new model.Block(z, x, y, id)
+        map.addBlock(block)
+        id++
     x++
     if x is map.mapTempW
       y++
       x = 0
-testmapW = 10
-testmapH = 8
+
+testmapW = 21
+testmapH = 15
 gamemap = new model.World()
 gamemap.addMapTemp(testmap, testmapW, testmapH)
 createBlocks(gamemap)
 
 
-io.sockets.on('connection', (socket) ->
+io.sockets.on('connection' , (socket) ->
 
   socket.on('new user', (player) ->
     if gamemap.ExistCond(player)
