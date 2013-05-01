@@ -1,22 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3893f024-e009-4195-a41f-63e0756a3b08" name="Default" comment="" />
+    <list default="true" id="3893f024-e009-4195-a41f-63e0756a3b08" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/client.coffee" afterPath="$PROJECT_DIR$/js/client.coffee" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/client.js" afterPath="$PROJECT_DIR$/js/client.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/client.map" afterPath="$PROJECT_DIR$/js/client.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/model.coffee" afterPath="$PROJECT_DIR$/js/model.coffee" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/model.js" afterPath="$PROJECT_DIR$/js/model.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/model.map" afterPath="$PROJECT_DIR$/js/model.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server.coffee" afterPath="$PROJECT_DIR$/server.coffee" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server.js" afterPath="$PROJECT_DIR$/server.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server.map" afterPath="$PROJECT_DIR$/server.map" />
+    </list>
     <ignored path="socket.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/server.js" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1364979078430" ignored="false" />
     <file path="/a.coffee" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1364975018635" ignored="false" />
-    <file path="/server.coffee" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1367333927815" ignored="false" />
+    <file path="/server.coffee" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1367408840934" ignored="false" />
     <file path="/index.html" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1366719750678" ignored="false" />
     <file path="/fragment.js" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1364985298073" ignored="false" />
-    <file path="/client.coffee" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1367337609526" ignored="false" />
-    <file path="/model.coffee" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1367338176928" ignored="false" />
+    <file path="/client.coffee" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1367407645603" ignored="false" />
+    <file path="/model.coffee" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1367398798157" ignored="false" />
     <file path="/style.css" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1364990335684" ignored="false" />
     <file path="/testing.html" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1364988404075" ignored="false" />
     <file path="/tests.coffee" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1364989675196" ignored="false" />
     <file path="/tests.js" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1364989152116" ignored="false" />
     <file path="/test.html" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1364990664201" ignored="false" />
-    <file path="/Dummy.txt" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1367335582854" ignored="false" />
+    <file path="/Dummy.txt" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1367395540396" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,16 +49,16 @@
       <file leaf-file-name="index.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="13" column="48" selection-start="467" selection-end="467" vertical-scroll-proportion="0.0">
+            <state line="13" column="48" selection-start="467" selection-end="467" vertical-scroll-proportion="-0.65384614">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="server.coffee" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="server.coffee" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/server.coffee">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="45" column="8" selection-start="1375" selection-end="1375" vertical-scroll-proportion="-0.13333334">
+            <state line="102" column="53" selection-start="2627" selection-end="2627" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -57,7 +67,7 @@
       <file leaf-file-name="model.coffee" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/model.coffee">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="88" column="0" selection-start="2389" selection-end="2389" vertical-scroll-proportion="0.0">
+            <state line="17" column="15" selection-start="312" selection-end="312" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -66,13 +76,13 @@
       <file leaf-file-name="client.coffee" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/client.coffee">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="84" column="23" selection-start="2922" selection-end="2922" vertical-scroll-proportion="0.0">
+            <state line="71" column="5" selection-start="2187" selection-end="2187" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="spritesBeta.png" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="spritesBeta.png" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/img/spritesBeta.png">
           <provider selected="true" editor-type-id="images">
             <state />
@@ -116,9 +126,9 @@
         <option value="$PROJECT_DIR$/css/style.css" />
         <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/js/model.js" />
-        <option value="$PROJECT_DIR$/server.coffee" />
-        <option value="$PROJECT_DIR$/js/client.coffee" />
         <option value="$PROJECT_DIR$/js/model.coffee" />
+        <option value="$PROJECT_DIR$/js/client.coffee" />
+        <option value="$PROJECT_DIR$/server.coffee" />
       </list>
     </option>
   </component>
@@ -144,7 +154,7 @@
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
       <flattenPackages />
-      <showMembers />
+      <showMembers ProjectPane="false" />
       <showModules />
       <showLibraryContents ProjectPane="true" />
       <hideEmptyPackages />
@@ -183,25 +193,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="js" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="model.coffee" />
-              <option name="myItemType" value="com.intellij.plugins.watcher.projectView.NestingTreeNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="socket" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bomber" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="js" />
+              <option name="myItemId" value="img" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -212,14 +204,14 @@
   <component name="PropertiesComponent">
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="options.lastSelected" value="project.propVCSSupport.Mappings" />
     <property name="recentsLimit" value="5" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="options.lastSelected" value="project.propVCSSupport.Mappings" />
     <property name="restartRequiresConfirmation" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="FullScreen" value="false" />
     <property name="DefaultHtmlFileTemplate" value="Html5" />
-    <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -317,13 +309,13 @@
     <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21232124" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32893288" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17491749" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24967825" sideWeight="0.68976897" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.14736165" sideWeight="0.73817384" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.15444015" sideWeight="0.7711771" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.45434543" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23432343" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2618262" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.22882289" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32893288" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -395,15 +387,10 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="7" />
+      <option name="time" value="8" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/js/jquery.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="28407" selection-start="92635" selection-end="92635" vertical-scroll-proportion="0.088626295" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/tests/qunit.css">
       <provider selected="true" editor-type-id="text-editor">
         <state line="220" column="80" selection-start="0" selection-end="4928" vertical-scroll-proportion="0.0" />
@@ -441,7 +428,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="48" selection-start="467" selection-end="467" vertical-scroll-proportion="0.0">
+        <state line="13" column="48" selection-start="467" selection-end="467" vertical-scroll-proportion="-0.65384614">
           <folding />
         </state>
       </provider>
@@ -461,30 +448,35 @@
         <state line="48" column="38" selection-start="1153" selection-end="1153" vertical-scroll-proportion="0.3437014" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/img/spritesBeta.png">
+    <entry file="file://$PROJECT_DIR$/img/backBeta.png">
       <provider selected="true" editor-type-id="images">
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/client.coffee">
+    <entry file="file://$PROJECT_DIR$/server.coffee">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="84" column="23" selection-start="2922" selection-end="2922" vertical-scroll-proportion="0.0">
+        <state line="102" column="53" selection-start="2627" selection-end="2627" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/js/model.coffee">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="88" column="0" selection-start="2389" selection-end="2389" vertical-scroll-proportion="0.0">
+        <state line="17" column="15" selection-start="312" selection-end="312" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server.coffee">
+    <entry file="file://$PROJECT_DIR$/js/client.coffee">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="45" column="8" selection-start="1375" selection-end="1375" vertical-scroll-proportion="-0.13333334">
+        <state line="71" column="5" selection-start="2187" selection-end="2187" vertical-scroll-proportion="0.0">
           <folding />
         </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/img/spritesBeta.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
       </provider>
     </entry>
   </component>

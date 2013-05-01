@@ -18,7 +18,7 @@
       imgBack = new Image();
       imgBack.src = 'img\\backBeta.png';
       drawWorld = function(map) {
-        var bl, bomb, canva, ctx, nam, _i, _j, _k, _l, _len, _len1, _len2, _len3, _ref, _ref1, _ref2, _ref3, _results;
+        var bl, bomb, canva, ctx, pl, _i, _j, _k, _l, _len, _len1, _len2, _len3, _ref, _ref1, _ref2, _ref3, _results;
         canva = document.getElementById("canvas");
         ctx = canva.getContext("2d");
         ctx.drawImage(imgBack, 0, 0);
@@ -37,10 +37,10 @@
             ctx.drawImage(imgSpr, 98, 0, 48, 48, bl.x, bl.y, 48, 48);
           }
         }
-        _ref1 = map.names;
+        _ref1 = map.players;
         for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-          nam = _ref1[_j];
-          _ref2 = map.players[nam].bombs;
+          pl = _ref1[_j];
+          _ref2 = pl.bombs;
           for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
             bomb = _ref2[_k];
             if (bomb.type === 1) {
@@ -48,12 +48,12 @@
             }
           }
         }
-        _ref3 = map.names;
+        _ref3 = map.players;
         _results = [];
         for (_l = 0, _len3 = _ref3.length; _l < _len3; _l++) {
-          nam = _ref3[_l];
-          ctx.drawImage(imgSpr, 148, 55, 48, 64, map.players[nam].x, map.players[nam].y - 16, 48, 64);
-          _results.push(ctx.fillText(map.players[nam].name, map.players[nam].x + 8, map.players[nam].y + 14));
+          pl = _ref3[_l];
+          ctx.drawImage(imgSpr, 148, 55, 48, 64, pl.x, pl.y - 16, 48, 64);
+          _results.push(ctx.fillText(pl.name, pl.x + 8, pl.y + 14));
         }
         return _results;
       };
@@ -61,24 +61,46 @@
       mv = 0;
       meb = 0;
       medb = 0;
-      me = new Player("P" + (Math.ceil(Math.random() * 16)), Math.ceil(Math.random() * 5) * 48, Math.ceil(Math.random() * 5) * 48);
+      me = new Player("P" + 1, (Math.ceil(Math.random() * 6) + 1) * 48, (Math.ceil(Math.random() * 5) + 1) * 48, 0);
       socket.emit('new user', me);
-      socket.on('add world', function(worldmap) {
+      socket.on('add world', function(worldmap, meid) {
+        var bomb, dbl, dbls, _i, _len;
         usergamemap = new World(worldmap);
+        if (me.id !== meid) {
+          me.id = meid;
+          me.name = "P" + (me.id + 1);
+        }
+        bomb = new Bomb(meb, me.x, me.y, 0);
+        dbls = bomb.BlockColl(bomb.x, bomb.y, usergamemap);
+        for (_i = 0, _len = dbls.length; _i < _len; _i++) {
+          dbl = dbls[_i];
+          usergamemap.delBlock(dbl);
+        }
         usergamemap.addPlayer(me);
+        socket.emit('update user', me);
+        socket.emit('update world', usergamemap.blocks);
         drawWorld(usergamemap);
         return setInterval(movePl, 100);
       });
       socket.on('add user', function(pl) {
-        usergamemap.addPlayer(new Player(pl.name, pl.x, pl.y));
+        usergamemap.addPlayer(new Player(pl.name, pl.x, pl.y, pl.id));
         return drawWorld(usergamemap);
       });
       socket.on('change user', function(pl) {
-        usergamemap.players[pl.name] = new Player(pl.name, pl.x, pl.y);
+        usergamemap.players[pl.id] = new Player(pl.name, pl.x, pl.y, pl.id);
         return drawWorld(usergamemap);
       });
-      /*socket.on('delete user', (pl) ->
-        usergamemap.delPlayer(new Player(pl.name, pl.x, pl.y))
+      socket.on('change world', function(gblocks) {
+        usergamemap.blocks = gblocks;
+        return drawWorld(usergamemap);
+      });
+      /*
+      socket.on('ping', (justvar) ->
+        socket.emit('pong', "fine", me.id)
+      )
+      
+      socket.on('delete user', (pl) ->
+        usergamemap.delPlayer(pl.id)
         drawWorld(usergamemap)
       )
       */
@@ -134,6 +156,7 @@
               me.delBomb();
               medb--;
               socket.emit('update user', me);
+              socket.emit('update world', usergamemap.blocks);
               drawWorld(usergamemap);
             }
           }

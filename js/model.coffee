@@ -4,16 +4,18 @@
 
 class Player
   bombs : []
-  constructor: (name, x, y ) ->
+  constructor: (name, x, y, id ) ->
     switch typeof name
       when 'string'
         @name = name
         @x = x
         @y = y
+        @id = id
       else
         @name = ""
         @x = 0
         @y = 0
+        @id = -1
         @bombs = []
   addBomb: (b) ->
     @bombs.push(b)
@@ -31,7 +33,6 @@ class Player
         if posY < bl.y+48 and posY+48 > bl.y then YColl = true
     if (XColl and YColl) then return false
     return true
-
   ###BoundColX: (posX, map) ->
     if posX > 960 then return posX-12
     if posX < 0 then return posX+12
@@ -67,7 +68,6 @@ class Block
 
 class World
   players : []
-  names : []
   mapTemp : []
   blocks : []
   mapTempW : 0
@@ -77,8 +77,7 @@ class World
     @mapTempW = mW
     @mapTempH = mH
   addPlayer: (pl) ->
-    @players[pl.name] = pl
-    @names.push(pl.name)
+    @players[pl.id] = pl
   addBlock: (bl) ->
     @blocks.push(bl)
   delBlock: (id) ->
@@ -86,22 +85,16 @@ class World
     @blocks[id].y = -48
     @blocks[id].type = -1
     @blocks[id].id = -1
-  ExistCond: (pl) ->
-    cond = false
-    if @players[pl.name] is undefined then cond = true
-    cond
   constructor: (obj) ->
     switch typeof obj
       when 'object'
         @players = obj.players
-        @names = obj.names
         @mapTemp = obj.mapTemp
         @blocks = obj.blocks
         @mapTempW = obj.mapTempW
         @mapTempH = obj.mapTempH
       else
         @players = []
-        @names = []
         @mapTemp = []
         @blocks = []
         @mapTempW = 0

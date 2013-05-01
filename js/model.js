@@ -13,17 +13,19 @@
 
     Player.prototype.bombs = [];
 
-    function Player(name, x, y) {
+    function Player(name, x, y, id) {
       switch (typeof name) {
         case 'string':
           this.name = name;
           this.x = x;
           this.y = y;
+          this.id = id;
           break;
         default:
           this.name = "";
           this.x = 0;
           this.y = 0;
+          this.id = -1;
           this.bombs = [];
       }
     }
@@ -134,8 +136,6 @@
 
     World.prototype.players = [];
 
-    World.prototype.names = [];
-
     World.prototype.mapTemp = [];
 
     World.prototype.blocks = [];
@@ -151,8 +151,7 @@
     };
 
     World.prototype.addPlayer = function(pl) {
-      this.players[pl.name] = pl;
-      return this.names.push(pl.name);
+      return this.players[pl.id] = pl;
     };
 
     World.prototype.addBlock = function(bl) {
@@ -166,20 +165,10 @@
       return this.blocks[id].id = -1;
     };
 
-    World.prototype.ExistCond = function(pl) {
-      var cond;
-      cond = false;
-      if (this.players[pl.name] === void 0) {
-        cond = true;
-      }
-      return cond;
-    };
-
     function World(obj) {
       switch (typeof obj) {
         case 'object':
           this.players = obj.players;
-          this.names = obj.names;
           this.mapTemp = obj.mapTemp;
           this.blocks = obj.blocks;
           this.mapTempW = obj.mapTempW;
@@ -187,7 +176,6 @@
           break;
         default:
           this.players = [];
-          this.names = [];
           this.mapTemp = [];
           this.blocks = [];
           this.mapTempW = 0;

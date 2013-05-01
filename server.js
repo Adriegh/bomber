@@ -7,7 +7,7 @@
 
 
 (function() {
-  var app, createBlocks, fs, gamemap, io, model, testmap, testmapH, testmapW;
+  var app, createBlocks, fs, gamemap, io, model, playersOk, tellme, testmap, testmapH, testmapW;
 
   fs = require('fs');
 
@@ -36,7 +36,7 @@
 
   model = require('./js/model.js');
 
-  testmap = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+  testmap = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
 
   createBlocks = function(map) {
     var block, id, type, x, y, z, _i, _len, _ref, _results;
@@ -70,6 +70,25 @@
     return _results;
   };
 
+  /*
+  ping = () ->
+    io.sockets.emit('ping', tellme)
+  
+  pong = () ->
+    answnum = 0
+    while answnum < playersOk.length
+      if playersOk[answnum] isnt 'fine'
+        gamemap.players[answnum].name = "leftthegame"
+      answnum++
+    for answ in playersOk
+      answ = "ok"
+  */
+
+
+  playersOk = [];
+
+  tellme = 0;
+
   testmapW = 21;
 
   testmapH = 15;
@@ -82,14 +101,23 @@
 
   io.sockets.on('connection', function(socket) {
     socket.on('new user', function(player) {
-      if (gamemap.ExistCond(player)) {
-        gamemap.addPlayer(player);
-        socket.emit('add world', gamemap);
-        return socket.broadcast.emit('add user', player);
+      var pl, _i, _len, _ref;
+      _ref = gamemap.players;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        pl = _ref[_i];
+        if (pl.bombs === void 0) {
+          player.id = pl.id;
+        }
       }
+      gamemap.addPlayer(player);
+      socket.emit('add world', gamemap, player.id);
+      return socket.broadcast.emit('add user', player);
     });
-    return socket.on('update user', function(player) {
+    socket.on('update user', function(player) {
       return socket.broadcast.emit('change user', player);
+    });
+    return socket.on('update world', function(gblocks) {
+      return socket.broadcast.emit('change world', gblocks);
     });
   });
 

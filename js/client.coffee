@@ -22,39 +22,63 @@ do ($ = jQuery) -> $(document).ready(() ->
       if bl.type is 1 then ctx.drawImage(imgSpr, 0, 0, 48, 48, bl.x, bl.y, 48, 48)
       if bl.type is 2 then ctx.drawImage(imgSpr, 49, 0, 48, 48, bl.x, bl.y, 48, 48)
       if bl.type is 3 then ctx.drawImage(imgSpr, 98, 0, 48, 48, bl.x, bl.y, 48, 48)
-    for nam in map.names
-      for bomb in map.players[nam].bombs
+    for pl in map.players
+      for bomb in pl.bombs
         if bomb.type is 1 then ctx.drawImage(imgSpr, 147, 0, 48, 48, bomb.x, bomb.y, 48, 48)
-    for nam in map.names
-      ctx.drawImage(imgSpr, 148, 55, 48, 64, map.players[nam].x, map.players[nam].y-16, 48, 64)
-      ctx.fillText(map.players[nam].name, map.players[nam].x+8, map.players[nam].y+14)
+    for pl in map.players
+      ctx.drawImage(imgSpr, 148, 55, 48, 64, pl.x, pl.y-16, 48, 64)
+      ctx.fillText(pl.name, pl.x+8, pl.y+14)
 
   usergamemap = new World()
   mv = 0
   meb = 0
   medb = 0
-  me = new Player("P#{Math.ceil(Math.random()*16)}", Math.ceil(Math.random()*5)*48, Math.ceil(Math.random()*5)*48)
+  me = new Player("P#{1}", ( Math.ceil(Math.random()*6 )+1)*48, ( Math.ceil(Math.random()*5)+1)*48, 0)
 
   socket.emit('new user', me )
-  socket.on('add world', (worldmap) ->
+  socket.on('add world', (worldmap, meid) ->
     usergamemap = new World(worldmap)
+    if me.id isnt meid
+      me.id = meid
+      me.name = "P#{me.id + 1}"
+
+    bomb = new Bomb(meb, me.x, me.y, 0)
+    dbls = bomb.BlockColl(bomb.x, bomb.y, usergamemap)
+    for dbl in dbls
+      usergamemap.delBlock(dbl)
+
     usergamemap.addPlayer(me)
+
+    socket.emit('update user', me)
+    socket.emit('update world', usergamemap.blocks)
+
     drawWorld(usergamemap)
     setInterval(movePl, 100)
     #setInterval(drawWorld, 45, usergamemap)
   )
   socket.on('add user', (pl) ->
-    usergamemap.addPlayer(new Player(pl.name, pl.x, pl.y))
+    usergamemap.addPlayer(new Player(pl.name, pl.x, pl.y, pl.id))
     drawWorld(usergamemap)
   )
   socket.on('change user', (pl) ->
-    usergamemap.players[pl.name] = new Player(pl.name, pl.x, pl.y)
+    usergamemap.players[pl.id] = new Player(pl.name, pl.x, pl.y, pl.id)
     drawWorld(usergamemap)
   )
-  ###socket.on('delete user', (pl) ->
-    usergamemap.delPlayer(new Player(pl.name, pl.x, pl.y))
+  socket.on('change world', (gblocks) ->
+    usergamemap.blocks = gblocks
     drawWorld(usergamemap)
-  )###
+  )
+
+  ###
+  socket.on('ping', (justvar) ->
+    socket.emit('pong', "fine", me.id)
+  )
+
+  socket.on('delete user', (pl) ->
+    usergamemap.delPlayer(pl.id)
+    drawWorld(usergamemap)
+  )
+  ###
 
   $("body").keydown((e) ->
     if e.keyCode is 39 then mv = 1
@@ -86,6 +110,7 @@ do ($ = jQuery) -> $(document).ready(() ->
           me.delBomb()
           medb--
           socket.emit('update user', me)
+          socket.emit('update world', usergamemap.blocks)
           drawWorld(usergamemap)
     if meb is 1
       bomb = new Bomb(meb, me.x, me.y, 30)
