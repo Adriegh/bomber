@@ -11,23 +11,13 @@
 
   Player = (function() {
 
-    Player.prototype.bombs = [];
-
-    function Player(name, x, y, id) {
-      switch (typeof name) {
-        case 'string':
-          this.name = name;
-          this.x = x;
-          this.y = y;
-          this.id = id;
-          break;
-        default:
-          this.name = "";
-          this.x = 0;
-          this.y = 0;
-          this.id = -1;
-          this.bombs = [];
-      }
+    function Player(name, x, y, id, bt, bombs) {
+      this.name = name;
+      this.x = x;
+      this.y = y;
+      this.id = id;
+      this.bt = bt;
+      this.bombs = bombs;
     }
 
     Player.prototype.addBomb = function(b) {
@@ -67,17 +57,6 @@
       }
       return true;
     };
-
-    /*BoundColX: (posX, map) ->
-      if posX > 960 then return posX-12
-      if posX < 0 then return posX+12
-      return posX
-    BoundColY: (posY, map) ->
-      if posY > 672 then return posY-12
-      if posY < 0 then return posY+12
-      return posY
-    */
-
 
     return Player;
 

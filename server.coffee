@@ -17,7 +17,7 @@ app = require('http').createServer (req, res) ->
 io = require('socket.io').listen app
 app.listen 12345
 ###
-  END server r outine
+  END server routine
 ###
 
 model = require('./js/model.js') # loading common model for game
@@ -60,59 +60,40 @@ createBlocks = (map) ->
       y++
       x = 0
 
-###
-ping = () ->
-  io.sockets.emit('ping', tellme)
 
-pong = () ->
-  answnum = 0
-  while answnum < playersOk.length
-    if playersOk[answnum] isnt 'fine'
-      gamemap.players[answnum].name = "leftthegame"
-    answnum++
-  for answ in playersOk
-    answ = "ok"
-###
-
-
-playersOk = []
-tellme = 0
+pid = 0
 testmapW = 21
 testmapH = 15
 gamemap = new model.World()
 gamemap.addMapTemp(testmap, testmapW, testmapH)
 createBlocks(gamemap)
 
-#setInterval(ping, 10)
-#setInterval(pong, 10)
-
-
 io.sockets.on('connection' , (socket) ->
 
+  socket.on('quene', (pl) ->
+    if pid < 2
+      socket.emit('in', pid)
+      pid++
+      if pid is 2 then socket.broadcast.emit('start', 0)
+    else if pid >= 2
+      socket.emit('out', 0)
+  )
+
   socket.on('new user', (player) ->
-    for pl in gamemap.players
-      #if pl.name is "leftthegame"
-      if pl.bombs is undefined
-        player.id = pl.id
-    #    break
-    #  else if pl.id is player.id then player.id = pl.id + 1
+    #player.id = pid
+    #pid++
     gamemap.addPlayer(player)
-    #a = "ok"
-    #playersOk[player.id] = a
     socket.emit('add world', gamemap, player.id)
     socket.broadcast.emit('add user', player)
   )
 
   socket.on('update user', (player) ->
+    gamemap.addPlayer(player)
     socket.broadcast.emit('change user', player)
   )
 
   socket.on('update world', (gblocks) ->
+    gamemap.blocks = gblocks
     socket.broadcast.emit('change world', gblocks)
   )
-
-  #socket.on('pong' , (answ, plid) ->
-  #  playersOk[plid] = answ
-  #)
-
 )

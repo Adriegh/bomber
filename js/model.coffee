@@ -3,20 +3,13 @@
 ###
 
 class Player
-  bombs : []
-  constructor: (name, x, y, id ) ->
-    switch typeof name
-      when 'string'
-        @name = name
-        @x = x
-        @y = y
-        @id = id
-      else
-        @name = ""
-        @x = 0
-        @y = 0
-        @id = -1
-        @bombs = []
+  constructor: (name, x, y, id, bt, bombs) ->
+    @name = name
+    @x = x
+    @y = y
+    @id = id
+    @bt = bt
+    @bombs = bombs
   addBomb: (b) ->
     @bombs.push(b)
   delBomb: () ->
@@ -33,14 +26,6 @@ class Player
         if posY < bl.y+48 and posY+48 > bl.y then YColl = true
     if (XColl and YColl) then return false
     return true
-  ###BoundColX: (posX, map) ->
-    if posX > 960 then return posX-12
-    if posX < 0 then return posX+12
-    return posX
-  BoundColY: (posY, map) ->
-    if posY > 672 then return posY-12
-    if posY < 0 then return posY+12
-    return posY###
 
 class Bomb
   constructor: (type, box, boy, time) ->
