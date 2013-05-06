@@ -161,3 +161,14 @@ pip-log.txt
 
 # Mac crap
 .DS_Store
+
+# project config
+.idea
+server.map
+server.js
+js/client.js
+js/client.map
+js/model.map
+js/model.js
+tests/tests.js
+tests/tests.map
