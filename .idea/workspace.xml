@@ -2,9 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3893f024-e009-4195-a41f-63e0756a3b08" name="Default" comment="">
-      <change type="DELETED" beforePath="E:\Programs\GitHUB\bomber\img\glyphicons-halflings.png" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/img/backBeta.png" afterPath="$PROJECT_DIR$/img/backBeta.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/img/backBeta2.png" afterPath="$PROJECT_DIR$/img/backBeta2.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/client.coffee" afterPath="$PROJECT_DIR$/js/client.coffee" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/client.js" afterPath="$PROJECT_DIR$/js/client.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/client.map" afterPath="$PROJECT_DIR$/js/client.map" />
@@ -15,23 +12,22 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server.coffee" afterPath="$PROJECT_DIR$/server.coffee" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server.js" afterPath="$PROJECT_DIR$/server.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server.map" afterPath="$PROJECT_DIR$/server.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="socket.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/server.js" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1364979078430" ignored="false" />
     <file path="/a.coffee" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1364975018635" ignored="false" />
-    <file path="/server.coffee" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1367744125422" ignored="false" />
+    <file path="/server.coffee" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1367839914902" ignored="false" />
     <file path="/index.html" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1367740631422" ignored="false" />
     <file path="/fragment.js" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1364985298073" ignored="false" />
-    <file path="/client.coffee" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1367743404423" ignored="false" />
-    <file path="/model.coffee" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1367735451674" ignored="false" />
+    <file path="/client.coffee" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1367838799310" ignored="false" />
+    <file path="/model.coffee" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1367839846219" ignored="false" />
     <file path="/style.css" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1364990335684" ignored="false" />
     <file path="/testing.html" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1364988404075" ignored="false" />
     <file path="/tests.coffee" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1364989675196" ignored="false" />
     <file path="/tests.js" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1364989152116" ignored="false" />
     <file path="/test.html" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1364990664201" ignored="false" />
-    <file path="/Dummy.txt" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1367736835261" ignored="false" />
+    <file path="/Dummy.txt" changelist="3893f024-e009-4195-a41f-63e0756a3b08" time="1367838603168" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,21 +47,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="index.html" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="index.html" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1" column="25" selection-start="22" selection-end="22" vertical-scroll-proportion="-0.65384614">
-              <folding>
-                <element signature="n#style#0;n#canvas#0;n#head#0;n#html#0;n#!!top" expanded="true" />
-              </folding>
+            <state line="1" column="163" selection-start="303" selection-end="314" vertical-scroll-proportion="0.026194144">
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="server.coffee" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="server.coffee" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/server.coffee">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="96" column="82" selection-start="2532" selection-end="2532" vertical-scroll-proportion="0.7733333">
+            <state line="98" column="50" selection-start="2542" selection-end="2542" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -74,7 +68,7 @@
       <file leaf-file-name="model.coffee" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/model.coffee">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="13" column="18" selection-start="243" selection-end="243" vertical-scroll-proportion="0.0">
+            <state line="67" column="14" selection-start="1908" selection-end="1908" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -83,7 +77,7 @@
       <file leaf-file-name="client.coffee" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/client.coffee">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="43" column="27" selection-start="1358" selection-end="1358" vertical-scroll-proportion="0.0">
+            <state line="87" column="27" selection-start="2349" selection-end="2349" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -132,10 +126,10 @@
         <option value="$PROJECT_DIR$/test.html" />
         <option value="$PROJECT_DIR$/css/style.css" />
         <option value="$PROJECT_DIR$/js/model.js" />
+        <option value="$PROJECT_DIR$/server.coffee" />
+        <option value="$PROJECT_DIR$/js/client.coffee" />
         <option value="$PROJECT_DIR$/js/model.coffee" />
         <option value="$PROJECT_DIR$/index.html" />
-        <option value="$PROJECT_DIR$/js/client.coffee" />
-        <option value="$PROJECT_DIR$/server.coffee" />
       </list>
     </option>
   </component>
@@ -171,7 +165,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -256,19 +249,20 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="recentsLimit" value="5" />
     <property name="options.lastSelected" value="project.propVCSSupport.Mappings" />
-    <property name="restartRequiresConfirmation" value="false" />
+    <property name="recentsLimit" value="5" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="restartRequiresConfirmation" value="false" />
     <property name="FullScreen" value="false" />
     <property name="DefaultHtmlFileTemplate" value="Html5" />
-    <property name="options.searchVisible" value="true" />
     <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -503,39 +497,35 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="25" selection-start="22" selection-end="22" vertical-scroll-proportion="-0.65384614">
-          <folding>
-            <element signature="n#style#0;n#canvas#0;n#head#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js/client.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="44" column="74" selection-start="1682" selection-end="1682" vertical-scroll-proportion="-0.15851852">
-          <folding />
-        </state>
+        <state line="44" column="74" selection-start="1682" selection-end="1682" vertical-scroll-proportion="-0.15851852" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/model.coffee">
+    <entry file="file://$PROJECT_DIR$/server.coffee">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="18" selection-start="243" selection-end="243" vertical-scroll-proportion="0.0">
+        <state line="98" column="50" selection-start="2542" selection-end="2542" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/js/client.coffee">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="43" column="27" selection-start="1358" selection-end="1358" vertical-scroll-proportion="0.0">
+        <state line="87" column="27" selection-start="2349" selection-end="2349" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server.coffee">
+    <entry file="file://$PROJECT_DIR$/js/model.coffee">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="96" column="82" selection-start="2532" selection-end="2532" vertical-scroll-proportion="0.7733333">
+        <state line="67" column="14" selection-start="1908" selection-end="1908" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="163" selection-start="303" selection-end="314" vertical-scroll-proportion="0.026194144">
           <folding />
         </state>
       </provider>

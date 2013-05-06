@@ -133,6 +133,11 @@
       return this.players[pl.id] = pl;
     };
 
+    World.prototype.delPlayer = function(pl) {
+      pl.x = -48;
+      return pl.y = -48;
+    };
+
     World.prototype.addBlock = function(bl) {
       return this.blocks.push(bl);
     };

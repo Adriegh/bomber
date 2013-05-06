@@ -63,6 +63,9 @@ class World
     @mapTempH = mH
   addPlayer: (pl) ->
     @players[pl.id] = pl
+  delPlayer: (pl) ->
+    pl.x = -48
+    pl.y = -48
   addBlock: (bl) ->
     @blocks.push(bl)
   delBlock: (id) ->

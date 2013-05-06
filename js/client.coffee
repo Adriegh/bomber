@@ -30,7 +30,8 @@ do ($ = jQuery) -> $(document).ready(() ->
   meb = 0
   me = new Player("P#{1}", ( Math.ceil(Math.random()*6 )+1)*48, ( Math.ceil(Math.random()*5)+1)*48, 0, 0, pbombs = [])
 
-  socket.emit('quene', 0)
+  ###
+  socket.emit('queue', 0)
 
   socket.on('in', (meid) ->
     me.id = meid
@@ -45,6 +46,8 @@ do ($ = jQuery) -> $(document).ready(() ->
     alert "Connection..."
     socket.emit('new user', me )
   )
+  ###
+  socket.emit('new user', me )
 
   socket.on('add world', (worldmap, meid) ->
     usergamemap = new World(worldmap)
@@ -67,18 +70,22 @@ do ($ = jQuery) -> $(document).ready(() ->
   )
 
   socket.on('add user', (pl) ->
-    usergamemap.addPlayer(pl) #new Player(pl.name, pl.x, pl.y, pl.id)
+    usergamemap.addPlayer(pl)
     drawWorld(usergamemap)
   )
 
   socket.on('change user', (pl) ->
-    usergamemap.players[pl.id] = pl #new Player(pl.name, pl.x, pl.y, pl.id)
+    usergamemap.players[pl.id] = pl
     drawWorld(usergamemap)
   )
 
   socket.on('change world', (gblocks) ->
     usergamemap.blocks = gblocks
     drawWorld(usergamemap)
+  )
+
+  $(window).on('unload', (e) ->
+    socket.emit('leave', me)
   )
 
   $("body").keydown((e) ->

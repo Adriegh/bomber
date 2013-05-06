@@ -7,7 +7,7 @@
 
 
 (function() {
-  var app, createBlocks, fs, gamemap, io, model, pid, testmap, testmapH, testmapW;
+  var app, arrpid, createBlocks, fs, gamemap, io, model, pid, testmap, testmapH, testmapW;
 
   fs = require('fs');
 
@@ -72,6 +72,8 @@
 
   pid = 0;
 
+  arrpid = [];
+
   testmapW = 21;
 
   testmapH = 15;
@@ -83,21 +85,32 @@
   createBlocks(gamemap);
 
   io.sockets.on('connection', function(socket) {
-    socket.on('quene', function(pl) {
-      if (pid < 2) {
-        socket.emit('in', pid);
-        pid++;
-        if (pid === 2) {
-          return socket.broadcast.emit('start', 0);
-        }
-      } else if (pid >= 2) {
-        return socket.emit('out', 0);
-      }
-    });
+    /*
+    socket.on('queue', (pl) ->
+      if pid < 2
+        socket.emit('in', pid)
+        pid++
+        if pid is 2 then socket.broadcast.emit('start', 0)
+      else if pid >= 2
+        socket.emit('out', 0)
+    )
+    */
     socket.on('new user', function(player) {
+      if (arrpid.length > 0) {
+        player.id = arrpid[0];
+        arrpid.splice(0, 1);
+      } else {
+        player.id = pid;
+        pid++;
+      }
       gamemap.addPlayer(player);
       socket.emit('add world', gamemap, player.id);
       return socket.broadcast.emit('add user', player);
+    });
+    socket.on('leave', function(player) {
+      arrpid.push(player.id);
+      gamemap.delPlayer(player);
+      return socket.broadcast.emit('change user', player);
     });
     socket.on('update user', function(player) {
       gamemap.addPlayer(player);

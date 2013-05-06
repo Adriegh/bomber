@@ -56,18 +56,25 @@
       mv = 0;
       meb = 0;
       me = new Player("P" + 1, (Math.ceil(Math.random() * 6) + 1) * 48, (Math.ceil(Math.random() * 5) + 1) * 48, 0, 0, pbombs = []);
-      socket.emit('quene', 0);
-      socket.on('in', function(meid) {
-        me.id = meid;
-        return me.name = "P" + (me.id + 1);
-      });
-      socket.on('out', function(dp) {
-        return alert("Room is full");
-      });
-      socket.on('start', function(dp) {
-        alert("Connection...");
-        return socket.emit('new user', me);
-      });
+      /*
+      socket.emit('queue', 0)
+      
+      socket.on('in', (meid) ->
+        me.id = meid
+        me.name = "P#{me.id + 1}"
+      )
+      
+      socket.on('out', (dp) ->
+        alert "Room is full"
+      )
+      
+      socket.on('start', (dp) ->
+        alert "Connection..."
+        socket.emit('new user', me )
+      )
+      */
+
+      socket.emit('new user', me);
       socket.on('add world', function(worldmap, meid) {
         var bomb, dbl, dbls, _i, _len;
         usergamemap = new World(worldmap);
@@ -97,6 +104,9 @@
       socket.on('change world', function(gblocks) {
         usergamemap.blocks = gblocks;
         return drawWorld(usergamemap);
+      });
+      $(window).on('unload', function(e) {
+        return socket.emit('leave', me);
       });
       $("body").keydown(function(e) {
         if (e.keyCode === 39) {

@@ -62,6 +62,7 @@ createBlocks = (map) ->
 
 
 pid = 0
+arrpid = []
 testmapW = 21
 testmapH = 15
 gamemap = new model.World()
@@ -69,8 +70,8 @@ gamemap.addMapTemp(testmap, testmapW, testmapH)
 createBlocks(gamemap)
 
 io.sockets.on('connection' , (socket) ->
-
-  socket.on('quene', (pl) ->
+  ###
+  socket.on('queue', (pl) ->
     if pid < 2
       socket.emit('in', pid)
       pid++
@@ -78,13 +79,23 @@ io.sockets.on('connection' , (socket) ->
     else if pid >= 2
       socket.emit('out', 0)
   )
-
+  ###
   socket.on('new user', (player) ->
-    #player.id = pid
-    #pid++
+    if arrpid.length > 0
+      player.id = arrpid[0]
+      arrpid.splice(0,1)
+    else
+      player.id = pid
+      pid++
     gamemap.addPlayer(player)
     socket.emit('add world', gamemap, player.id)
     socket.broadcast.emit('add user', player)
+  )
+
+  socket.on('leave', (player) ->
+    arrpid.push(player.id)
+    gamemap.delPlayer(player)
+    socket.broadcast.emit('change user', player)
   )
 
   socket.on('update user', (player) ->
