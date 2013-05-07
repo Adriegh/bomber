@@ -63,6 +63,7 @@ createBlocks = (map) ->
 
 pid = 0
 arrpid = []
+count = 0
 testmapW = 21
 testmapH = 15
 gamemap = new model.World()
@@ -70,14 +71,15 @@ gamemap.addMapTemp(testmap, testmapW, testmapH)
 createBlocks(gamemap)
 
 io.sockets.on('connection' , (socket) ->
+
   ###
-  socket.on('queue', (pl) ->
-    if pid < 2
-      socket.emit('in', pid)
-      pid++
-      if pid is 2 then socket.broadcast.emit('start', 0)
-    else if pid >= 2
-      socket.emit('out', 0)
+  socket.on("try_con", (player) ->
+    if count < 2
+      socket.emit('response', "accept")
+      count++
+      if count is 2 then io.sockets.emit('response', "start")
+    else
+      socket.emit('response', "deny")
   )
   ###
   socket.on('new user', (player) ->
@@ -95,6 +97,7 @@ io.sockets.on('connection' , (socket) ->
   socket.on('leave', (player) ->
     arrpid.push(player.id)
     gamemap.delPlayer(player)
+    socket.emit('change user', player)
     socket.broadcast.emit('change user', player)
   )
 

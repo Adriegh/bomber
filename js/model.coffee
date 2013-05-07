@@ -33,9 +33,9 @@ class Bomb
     @x = box
     @y = boy
     @time = time
-  BlockColl: ( bposX, bposY, map) ->
+  BlockColl: ( bposX, bposY, blocks) ->
     blow = []
-    for bl in map.blocks
+    for bl in blocks
       if bl.type > 1
         if bl.x is bposX and bl.y is bposY then blow.push(bl.id)
         else if bl.x is bposX-48 and bl.y is bposY then blow.push(bl.id)
@@ -43,6 +43,34 @@ class Bomb
         else if bl.y is bposY-48 and bl.x is bposX then blow.push(bl.id)
         else if bl.y is bposY+48 and bl.x is bposX then blow.push(bl.id)
     return blow
+  PlayerColl: ( bposX, bposY, players) ->
+    blow = []
+    for pl in players
+      if pl.x is bposX and pl.y is bposY then blow.push(pl.id)
+      else if pl.x is bposX-48 and pl.y is bposY then blow.push(pl.id)
+      else if pl.x is bposX+48 and pl.y is bposY then blow.push(pl.id)
+      else if pl.y is bposY-48 and pl.x is bposX then blow.push(pl.id)
+      else if pl.y is bposY+48 and pl.x is bposX then blow.push(pl.id)
+    return blow
+  BombPlace: ( bposX, bposY, players) ->
+    if ( bposX+1 ) % 48 > 23 and ( bposY+1 ) % 48 > 23
+      @x = Math.ceil(bposX / 48)*48
+      @y = Math.ceil(bposY / 48)*48
+    else if ( bposX+1 ) % 48 > 23
+      @x = Math.ceil(bposX / 48)*48
+      @y = Math.floor(bposY / 48)*48
+    else if ( bposY+1 ) % 48 > 23
+      @x = Math.floor(bposX / 48)*48
+      @y = Math.ceil(bposY / 48)*48
+    else
+      @x = Math.floor(bposX / 48)*48
+      @y = Math.floor(bposY / 48)*48
+    for pl in players
+      if pl.bombs.length > 0
+        for bomb in pl.bombs
+          if @x is bomb.x and @y is bomb.y
+            @x=-96
+            @y=-96
 
 class Block
   constructor: (material, blx, bly, id) ->
@@ -57,22 +85,6 @@ class World
   blocks : []
   mapTempW : 0
   mapTempH : 0
-  addMapTemp: (map, mW, mH) ->
-    @mapTemp = map
-    @mapTempW = mW
-    @mapTempH = mH
-  addPlayer: (pl) ->
-    @players[pl.id] = pl
-  delPlayer: (pl) ->
-    pl.x = -48
-    pl.y = -48
-  addBlock: (bl) ->
-    @blocks.push(bl)
-  delBlock: (id) ->
-    @blocks[id].x = -48
-    @blocks[id].y = -48
-    @blocks[id].type = -1
-    @blocks[id].id = -1
   constructor: (obj) ->
     switch typeof obj
       when 'object'
@@ -87,6 +99,24 @@ class World
         @blocks = []
         @mapTempW = 0
         @mapTempH = 0
+  addMapTemp: (map, mW, mH) ->
+    @mapTemp = map
+    @mapTempW = mW
+    @mapTempH = mH
+  addPlayer: (pl) ->
+    @players[pl.id] = pl
+  delPlayer: (pl) ->
+    pl.x = -48
+    pl.y = -48
+    pl.bombs = []
+  addBlock: (bl) ->
+    @blocks.push(bl)
+  delBlock: (id) ->
+    @blocks[id].x = -48
+    @blocks[id].y = -48
+    @blocks[id].type = -1
+    @blocks[id].id = -1
+
 
 #exports for client (window.) and server  (require(...).)
 module?.exports =
