@@ -1,7 +1,3 @@
-###
-  Здесь реализована модель проекта. В частности игрок.
-###
-
 class Player
   constructor: (name, x, y, id, bt, bombs) ->
     @name = name
@@ -14,10 +10,10 @@ class Player
     @bombs.push(b)
   delBomb: () ->
     @bombs.splice(0,1)
-  BoundColl: ( posX, posY, map) ->
+  BoundColl: ( posX, posY, blocks) ->
     XColl = false
     YColl = false
-    for bl in map.blocks
+    for bl in blocks
       if bl.x is Math.ceil(posX / 48)*48 and ( bl.y is Math.ceil(posY / 48)*48 or bl.y is (Math.ceil(posY / 48)-1)*48 )
         if posX+48 > bl.x and posX < bl.x+48 then XColl = true
         if posY+48 > bl.y and posY < bl.y+48 then YColl = true
@@ -28,43 +24,69 @@ class Player
     return true
 
 class Bomb
-  constructor: (type, box, boy, time) ->
+  constructor: (type, box, boy, time, frpwr) ->
     @type = type
     @x = box
     @y = boy
     @time = time
-  BlockColl: ( bposX, bposY, blocks) ->
+    @frpwr = frpwr
+  BlockColl: (blocks) ->
     blow = []
     for bl in blocks
       if bl.type > 1
         if bl.x is bposX and bl.y is bposY then blow.push(bl.id)
-        else if bl.x is bposX-48 and bl.y is bposY then blow.push(bl.id)
-        else if bl.x is bposX+48 and bl.y is bposY then blow.push(bl.id)
-        else if bl.y is bposY-48 and bl.x is bposX then blow.push(bl.id)
-        else if bl.y is bposY+48 and bl.x is bposX then blow.push(bl.id)
+        else if bl.x is @x-48 and bl.y is @y then blow.push(bl.id)
+        else if bl.x is @x+48 and bl.y is @y then blow.push(bl.id)
+        else if bl.y is @y-48 and bl.x is @x then blow.push(bl.id)
+        else if bl.y is @y+48 and bl.x is @x then blow.push(bl.id)
+        ###
+        cap = blow.length
+        if bl.x is @x and bl.y is @y then blow.push(bl.id)
+        for bfrpwr in [0...@frpwr]
+          if ( blow.length - cap is 0 ) and bl.x is @x-(48+48*bfrpwr) and bl.y is @y
+            blow.push(bl.id)
+            alert blow.length-1-cap
+        while bfrpwr < @frpwr
+          if bl.x is @x+48+(48*bfrpwr) and bl.y is @y
+            blow.push(bl.id)
+            bfrpwr = @frpwr
+          bfrpwr++
+        bfrpwr = 0
+        while bfrpwr < @frpwr
+          if bl.y is @y-48-(48*bfrpwr) and bl.x is @x
+            blow.push(bl.id)
+            bfrpwr = @frpwr
+          bfrpwr++
+        bfrpwr = 0
+        while bfrpwr < @frpwr
+          if bl.y is @y+48+(48*bfrpwr) and bl.x is @x
+            blow.push(bl.id)
+            bfrpwr = @frpwr
+          bfrpwr++
+        ###
     return blow
-  PlayerColl: ( bposX, bposY, players) ->
+  PlayerColl: (players) ->
     blow = []
     for pl in players
-      if pl.x is bposX and pl.y is bposY then blow.push(pl.id)
-      else if pl.x is bposX-48 and pl.y is bposY then blow.push(pl.id)
-      else if pl.x is bposX+48 and pl.y is bposY then blow.push(pl.id)
-      else if pl.y is bposY-48 and pl.x is bposX then blow.push(pl.id)
-      else if pl.y is bposY+48 and pl.x is bposX then blow.push(pl.id)
+      if ( pl.x+48 > @x and pl.x < @x+48 ) and ( pl.y+48 > @y and pl.y < @y+48 ) then blow.push(pl.id)
+      if ( pl.x+48 > @x-48 and pl.x < @x ) and ( pl.y+48 > @y and pl.y < @y+48 ) then blow.push(pl.id)
+      if ( pl.x+48 > @x+48 and pl.x < @x+96 ) and ( pl.y+48 > @y and pl.y < @y+48 ) then blow.push(pl.id)
+      if ( pl.x+48 > @x and pl.x < @x+48 ) and ( pl.y+48 > @y-48 and pl.y < @y ) then blow.push(pl.id)
+      if ( pl.x+48 > @x and pl.x < @x+48 ) and ( pl.y+48 > @y+48 and pl.y < @y+96 ) then blow.push(pl.id)
     return blow
-  BombPlace: ( bposX, bposY, players) ->
-    if ( bposX+1 ) % 48 > 23 and ( bposY+1 ) % 48 > 23
-      @x = Math.ceil(bposX / 48)*48
-      @y = Math.ceil(bposY / 48)*48
-    else if ( bposX+1 ) % 48 > 23
-      @x = Math.ceil(bposX / 48)*48
-      @y = Math.floor(bposY / 48)*48
-    else if ( bposY+1 ) % 48 > 23
-      @x = Math.floor(bposX / 48)*48
-      @y = Math.ceil(bposY / 48)*48
+  BombPlace: (players) ->
+    if ( @x+1 ) % 48 > 23 and ( @y+1 ) % 48 > 23
+      @x = Math.ceil(@x / 48)*48
+      @y = Math.ceil(@y / 48)*48
+    else if ( @x+1 ) % 48 > 23
+      @x = Math.ceil(@x / 48)*48
+      @y = Math.floor(@y / 48)*48
+    else if ( @y+1 ) % 48 > 23
+      @x = Math.floor(@x / 48)*48
+      @y = Math.ceil(@y / 48)*48
     else
-      @x = Math.floor(bposX / 48)*48
-      @y = Math.floor(bposY / 48)*48
+      @x = Math.floor(@x / 48)*48
+      @y = Math.floor(@y / 48)*48
     for pl in players
       if pl.bombs.length > 0
         for bomb in pl.bombs
@@ -80,11 +102,6 @@ class Block
     @id = id
 
 class World
-  players : []
-  mapTemp : []
-  blocks : []
-  mapTempW : 0
-  mapTempH : 0
   constructor: (obj) ->
     switch typeof obj
       when 'object'

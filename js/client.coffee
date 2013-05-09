@@ -13,22 +13,53 @@ do ($ = jQuery) -> $(document).ready(() ->
 
     ctx.font="12px Arial"
     ctx.fillStyle="black"
+    for pl in map.players
+      if pl.bt > 0
+        for bomb in pl.bombs
+          if bomb.type is 1 then ctx.drawImage(imgSpr, 147, 0, 48, 48, bomb.x, bomb.y, 48, 48)
+          if bomb.time is 0
+            bombid.push(5)
+            bombX.push(bomb.x)
+            bombY.push(bomb.y)
+    if bombid.length > 0
+      bid = 0
+      while bid < bombid.length
+        ctx.drawImage(imgSpr, 0, 48, 48, 48, bombX[bid], bombY[bid], 48, 48)
+        ctx.drawImage(imgSpr, 0, 48, 48, 48, bombX[bid]+48, bombY[bid], 48, 48)
+        ctx.drawImage(imgSpr, 0, 48, 48, 48, bombX[bid]-48, bombY[bid], 48, 48)
+        ctx.drawImage(imgSpr, 0, 48, 48, 48, bombX[bid], bombY[bid]+48, 48, 48)
+        ctx.drawImage(imgSpr, 0, 48, 48, 48, bombX[bid], bombY[bid]-48, 48, 48)
+        bid++
     for bl in map.blocks
       if bl.type is 1 then ctx.drawImage(imgSpr, 0, 0, 48, 48, bl.x, bl.y, 48, 48)
       if bl.type is 2 then ctx.drawImage(imgSpr, 49, 0, 48, 48, bl.x, bl.y, 48, 48)
       if bl.type is 3 then ctx.drawImage(imgSpr, 98, 0, 48, 48, bl.x, bl.y, 48, 48)
     for pl in map.players
-      if pl.bt > 0
-        for bomb in pl.bombs
-          if bomb.type is 1 then ctx.drawImage(imgSpr, 147, 0, 48, 48, bomb.x, bomb.y, 48, 48)
-    for pl in map.players
       ctx.drawImage(imgSpr, 148, 55, 48, 64, pl.x, pl.y-16, 48, 64)
       ctx.fillText(pl.name, pl.x+8, pl.y+14)
+
+  bombsDraw = () ->
+    countid = 0
+    arrid = []
+    if bombid.length > 0
+      while countid < bombid.length
+        bombid[countid] -= 1
+        if bombid[countid] is 0
+          arrid.push(countid)
+          bombX.splice(countid,1)
+          bombY.splice(countid,1)
+        countid++
+      for id in arrid
+        bombid.splice(id, 1)
+        drawWorld(usergamemap)
 
   usergamemap = new World()
   mvdwn = 0
   mvup = 0
   meb = 0
+  bombid = []
+  bombX = []
+  bombY = []
   control = 0
 
   me = new Player("P#{1}", ( Math.ceil(Math.random()*6 )+1)*48, ( Math.ceil(Math.random()*5)+1)*48, 0, 0, pbombs = [])
@@ -54,8 +85,8 @@ do ($ = jQuery) -> $(document).ready(() ->
     me.id = meid
     me.name = "P#{me.id + 1}"
     me.delBomb()
-    bomb = new Bomb(meb, me.x, me.y-48, 0)
-    dbls = bomb.BlockColl(bomb.x, bomb.y, usergamemap.blocks)
+    bomb = new Bomb(meb, me.x, me.y-48, 0, 1)
+    dbls = bomb.BlockColl(usergamemap.blocks)
     for dbl in dbls
       usergamemap.delBlock(dbl)
 
@@ -66,6 +97,7 @@ do ($ = jQuery) -> $(document).ready(() ->
 
     drawWorld(usergamemap)
     setInterval(movePl, 100)
+    setInterval(bombsDraw, 100)
     #setInterval(drawWorld, 45, usergamemap)
   )
 
@@ -104,20 +136,20 @@ do ($ = jQuery) -> $(document).ready(() ->
 
   movePl = () ->
     if control isnt -1
-      if ( mvdwn is 1 ) and me.BoundColl( me.x+12, me.y, usergamemap ) then me.x = me.x+12
-      else if ( mvdwn is 2 ) and me.BoundColl( me.x-12, me.y, usergamemap ) then me.x = me.x-12
-      else if ( mvdwn is 3 ) and me.BoundColl( me.x, me.y-12, usergamemap ) then me.y = me.y-12
-      else if ( mvdwn is 4 ) and me.BoundColl( me.x, me.y+12, usergamemap ) then me.y = me.y+12
+      if ( mvdwn is 1 ) and me.BoundColl( me.x+12, me.y, usergamemap.blocks ) then me.x = me.x+12
+      else if ( mvdwn is 2 ) and me.BoundColl( me.x-12, me.y, usergamemap.blocks ) then me.x = me.x-12
+      else if ( mvdwn is 3 ) and me.BoundColl( me.x, me.y-12, usergamemap.blocks ) then me.y = me.y-12
+      else if ( mvdwn is 4 ) and me.BoundColl( me.x, me.y+12, usergamemap.blocks ) then me.y = me.y+12
       if me.bt > 0
         for bmb in me.bombs
           if bmb.time > 0 then bmb.time -= 1
           else
-            bidarr = bmb.BlockColl(bmb.x, bmb.y, usergamemap.blocks)
+            bidarr = bmb.BlockColl(usergamemap.blocks)
             if bidarr.length > 0
               for bid in bidarr
                 usergamemap.delBlock(bid)
                 #alert bid
-            pidarr = bmb.PlayerColl(bmb.x, bmb.y, usergamemap.players)
+            pidarr = bmb.PlayerColl(usergamemap.players)
             if pidarr.length > 0
               for pid in pidarr
                 socket.emit('leave', usergamemap.players[pid])
@@ -127,8 +159,8 @@ do ($ = jQuery) -> $(document).ready(() ->
             socket.emit('update world', usergamemap.blocks)
             drawWorld(usergamemap)
       if meb is 1
-        bomb = new Bomb(meb, me.x, me.y, 30)
-        bomb.BombPlace(bomb.x, bomb.y, usergamemap.players)
+        bomb = new Bomb(meb, me.x, me.y, 30, 2)
+        bomb.BombPlace(usergamemap.players)
         me.addBomb(bomb)
         meb = 0
         me.bt++

@@ -1,6 +1,5 @@
-###
-  BEGIN server routine
-###
+# BEGIN server routine
+
 fs = require('fs')
 app = require('http').createServer (req, res) ->
   page = if req.url is '/' then '/index.html' else req.url
@@ -16,9 +15,8 @@ app = require('http').createServer (req, res) ->
   )
 io = require('socket.io').listen app
 app.listen 12345
-###
-  END server routine
-###
+
+#  END server routine
 
 model = require('./js/model.js') # loading common model for game
 
@@ -52,6 +50,8 @@ createBlocks = (map) ->
     else if type is 0
       z = Math.ceil(Math.random()*3)
       if z > 1
+        if z is 3
+          if Math.ceil(Math.random()*4) isnt 1 then z = 2
         block = new model.Block(z, x, y, id)
         map.addBlock(block)
         id++
