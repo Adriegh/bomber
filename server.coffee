@@ -21,54 +21,44 @@ app.listen 12345
 model = require('./js/model.js') # loading common model for game
 
 testmap = [
-            1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
-            1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1
-            1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1
-            1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1
-            1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1
-            1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1
-            1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1
-            1,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0,1,1,1,1,1
-            1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1
-            1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1
-            1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1
-            1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1
-            1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1
-            1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1
-            1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+            [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1]
+            [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1]
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1]
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1]
+            [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1]
+            [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1]
+            [1,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0,1,1,1,1,1]
+            [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1]
+            [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1]
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1]
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1]
+            [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1]
+            [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1]
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
           ]
 
-createBlocks = (map) ->
-  x = 0
-  y = 0
-  id = 0
-  for type in map.mapTemp
-    if type is 1
-      block = new model.Block(type, x, y, id)
-      map.addBlock(block)
-      id++
-    else if type is 0
-      z = Math.ceil(Math.random()*3)
-      if z > 1
-        if z is 3
-          if Math.ceil(Math.random()*4) isnt 1 then z = 2
-        block = new model.Block(z, x, y, id)
-        map.addBlock(block)
-        id++
-    x++
-    if x is map.mapTempW
-      y++
-      x = 0
+createBlocks = (testmap) ->
+  for Btype in testmap
+    x = 0
+    for type in Btype
+      if type is 0
+        stype = Math.ceil(Math.random()*3)
+        if stype > 1
+          if stype is 3
+            if Math.ceil(Math.random()*4) isnt 1 then stype = 2
+        else stype = 0
+        type = stype
+      Btype[x] = type
+      x++
 
 
 pid = 0
 arrpid = []
 count = 0
-testmapW = 21
-testmapH = 15
 gamemap = new model.World()
-gamemap.addMapTemp(testmap, testmapW, testmapH)
-createBlocks(gamemap)
+createBlocks(testmap)
+gamemap.addMap(testmap)
 
 io.sockets.on('connection' , (socket) ->
 
@@ -82,6 +72,7 @@ io.sockets.on('connection' , (socket) ->
       socket.emit('response', "deny")
   )
   ###
+
   socket.on('new user', (player) ->
     if arrpid.length > 0
       player.id = arrpid[0]
@@ -106,8 +97,8 @@ io.sockets.on('connection' , (socket) ->
     socket.broadcast.emit('change user', player)
   )
 
-  socket.on('update world', (gblocks) ->
-    gamemap.blocks = gblocks
-    socket.broadcast.emit('change world', gblocks)
+  socket.on('update world', (gmap) ->
+    gamemap.map = gmap
+    socket.broadcast.emit('change world', gmap)
   )
 )
