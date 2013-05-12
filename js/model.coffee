@@ -1,13 +1,15 @@
 class Player
-  constructor: (name, x, y, id, direction, bombcount, bombtype, bombpwr ,bombs) ->
+  constructor: (name, x, y, id, condition, direction, bombcount, bombtype, bombpwr, bombamount ,bombs) ->
     @name = name
     @x = x
     @y = y
     @id = id
+    @condition = condition
     @direction = direction
     @bombcount = bombcount
     @bombtype = bombtype
     @bombpwr = bombpwr
+    @bombamount = bombamount
     @bombs = bombs
   addBomb: (b) ->
     @bombs.push(b)
@@ -42,7 +44,8 @@ class Bomb
       if 0 < map[ Math.floor(@y/48) ][ Math.floor((@x-(48*bfrpwr))/48) ] < 4
         if 1 < map[ Math.floor(@y/48) ][ Math.floor((@x-(48*bfrpwr))/48) ] < 4
           map[ Math.floor(@y/48) ][ Math.floor((@x-(48*bfrpwr))/48) ] = 0
-        break
+          if @type isnt 3 then break
+        if map[ Math.floor(@y/48) ][ Math.floor((@x-(48*bfrpwr))/48) ] is 1 then break
       bfrpwr++
 
     bfrpwr = 1
@@ -50,7 +53,8 @@ class Bomb
       if 0 < map[ Math.floor(@y/48) ][ Math.floor((@x+(48*bfrpwr))/48) ] < 4
         if  1 < map[ Math.floor(@y/48) ][ Math.floor((@x+(48*bfrpwr))/48) ] < 4
           map[ Math.floor(@y/48) ][ Math.floor((@x+(48*bfrpwr))/48) ] = 0
-        break
+          if @type isnt 3 then break
+        if  map[ Math.floor(@y/48) ][ Math.floor((@x+(48*bfrpwr))/48) ] is 1 then break
       bfrpwr++
 
     bfrpwr = 1
@@ -58,7 +62,8 @@ class Bomb
       if 0 < map[ Math.floor((@y-(48*bfrpwr))/48) ][ Math.floor(@x/48) ] < 4
         if 1 < map[ Math.floor((@y-(48*bfrpwr))/48) ][ Math.floor(@x/48) ] < 4
           map[ Math.floor((@y-(48*bfrpwr))/48) ][ Math.floor(@x/48) ] = 0
-        break
+          if @type isnt 3 then break
+        if map[ Math.floor((@y-(48*bfrpwr))/48) ][ Math.floor(@x/48) ] is 1 then break
       bfrpwr++
 
     bfrpwr = 1
@@ -66,7 +71,8 @@ class Bomb
       if 0 < map[ Math.floor((@y+(48*bfrpwr))/48) ][ Math.floor(@x/48) ] < 4
         if 1 < map[ Math.floor((@y+(48*bfrpwr))/48) ][ Math.floor(@x/48) ] < 4
           map[ Math.floor((@y+(48*bfrpwr))/48) ][ Math.floor(@x/48) ] = 0
-        break
+          if @type isnt 3 then break
+        if map[ Math.floor((@y+(48*bfrpwr))/48) ][ Math.floor(@x/48) ] is 1 then break
       bfrpwr++
 
   PlayerColl: (players) ->
@@ -124,6 +130,8 @@ class World
     pl.x = -48
     pl.y = -48
     pl.bombs = []
+    pl.bombcount = 0
+    pl.direction = 0
   addBlock: (bl) ->
     @blocks[bl.id]=bl
   delBlock: (id) ->

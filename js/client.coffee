@@ -17,32 +17,28 @@ do ($ = jQuery) -> $(document).ready(() ->
       if pl.bombcount > 0
         for bomb in pl.bombs
           if bomb.type is 1 then ctx.drawImage(imgSpr, 147, 0, 48, 48, bomb.x, bomb.y, 48, 48)
-          if bomb.time is 0
-            bombid.push(5)
-            bombX.push(bomb.x)
-            bombY.push(bomb.y)
-    if bombid.length > 0
-      bid = 0
-      while bid < bombid.length
+          if bomb.type is 2 then ctx.drawImage(imgSpr, 196, 0, 48, 48, bomb.x, bomb.y, 48, 48)
+          if bomb.type is 3 then ctx.drawImage(imgSpr, 245, 0, 48, 48, bomb.x, bomb.y, 48, 48)
+          if bomb.time is 100
+            while i < 10
+              pwr = 1
+              while pwr < me.bombpwr+1
+                ctx.drawImage(imgSpr, 0, 48, 48, 48, bomb.x+(48*pwr), bomb.y, 48, 48)
+                pwr++
+              pwr=1
+              while pwr < me.bombpwr+1
+                ctx.drawImage(imgSpr, 0, 48, 48, 48, bomb.x-(48*pwr), bomb.y, 48, 48)
+                pwr++
+              pwr=1
+              while pwr < me.bombpwr+1
+                ctx.drawImage(imgSpr, 0, 48, 48, 48, bomb.x, bomb.y+(48*pwr), 48, 48)
+                pwr++
+              pwr=1
+              while pwr < me.bombpwr+1
+                ctx.drawImage(imgSpr, 0, 48, 48, 48, bomb.x, bomb.y-(48*pwr), 48, 48)
+                pwr++
+              i++
 
-        pwr = 1
-        while pwr < me.bombpwr+1
-          ctx.drawImage(imgSpr, 0, 48, 48, 48, bombX[bid]+(48*pwr), bombY[bid], 48, 48)
-          pwr++
-        pwr=1
-        while pwr < me.bombpwr+1
-          ctx.drawImage(imgSpr, 0, 48, 48, 48, bombX[bid]-(48*pwr), bombY[bid], 48, 48)
-          pwr++
-        pwr=1
-        while pwr < me.bombpwr+1
-          ctx.drawImage(imgSpr, 0, 48, 48, 48, bombX[bid], bombY[bid]+(48*pwr), 48, 48)
-          pwr++
-        pwr=1
-        while pwr < me.bombpwr+1
-          ctx.drawImage(imgSpr, 0, 48, 48, 48, bombX[bid], bombY[bid]-(48*pwr), 48, 48)
-          pwr++
-
-        bid++
     y = 0
     for Btype in map.map
       x = 0
@@ -53,37 +49,21 @@ do ($ = jQuery) -> $(document).ready(() ->
         x++
       y++
     for pl in map.players
-      ctx.drawImage(imgSpr, 148, 55, 48, 64, pl.x, pl.y-16, 48, 64)
-      ctx.fillText(pl.name, pl.x+8, pl.y+14)
-
-  bombsDraw = () ->
-    countid = 0
-    arrid = []
-    if bombid.length > 0
-      while countid < bombid.length
-        bombid[countid] -= 1
-        if bombid[countid] is 0
-          arrid.push(countid)
-          bombX.splice(countid,1)
-          bombY.splice(countid,1)
-        countid++
-      for id in arrid
-        bombid.splice(id, 1)
-        drawWorld(usergamemap)
+      if pl.condition is 1
+        ctx.drawImage(imgSpr, 148, 55, 48, 64, pl.x, pl.y-16, 48, 64)
+        ctx.fillText(pl.name, pl.x+8, pl.y+14)
 
   usergamemap = new World()
   mvup = 0
   meb = 0
-  bombid = []
-  bombX = []
-  bombY = []
+  meb2 = 0
   control = 0
+  intervalid = 0
 
-  me = new Player("P#{1}", ( Math.ceil(Math.random()*6 )+1)*48, ( Math.ceil(Math.random()*5)+1)*48, 0, 0, 0, 1, 2, pbombs = [])
-                 # name                    x                                   y                  id  dir bc bt bp  bombs
+  me = new Player("P#{1}", ( Math.ceil(Math.random()*6 )+1)*48, ( Math.ceil(Math.random()*5)+1)*48, 0, 1, 0, 0, 3, 2, 3, pbombs = [])
+                 # name                    x                                   y                    id c dir bc bt bp ba  bombs
 
   #socket.emit('try_con', me)
-
   ###
   socket.on('response', (index) ->
     if index is "accept"
@@ -98,25 +78,20 @@ do ($ = jQuery) -> $(document).ready(() ->
 
   socket.emit('new user', me)
 
-  socket.on('add world', (worldmap, meid) ->
+  socket.on('add world', (worldmap, newid) ->
     usergamemap = new World(worldmap)
-    me.id = meid
+    me.id = newid
     me.name = "P#{me.id + 1}"
     bomb = new Bomb(me.bombtype, me.x, me.y-48, 0, 1)
     bomb.BlockColl(usergamemap.map)
     me.delBomb()
-    usergamemap.addPlayer(me)
-
-    oldx = me.x
-    oldy = me.y
+    #usergamemap.addPlayer(me)
     usergamemap.map[Math.floor(me.y/48)][Math.floor(me.x/48)] = 9
     socket.emit('update user', me)
     socket.emit('update world', usergamemap.map)
 
     drawWorld(usergamemap)
-    setInterval(movePl, 100)
-    setInterval(bombsDraw, 100)
-    #setInterval(drawWorld, 45, usergamemap)
+    intervalid = setInterval(movePl, 100)
   )
 
   socket.on('add user', (pl) ->
@@ -124,10 +99,20 @@ do ($ = jQuery) -> $(document).ready(() ->
     drawWorld(usergamemap)
   )
 
+  socket.on('delete user', (id) ->
+    if id is me.id
+      clearInterval(intervalid)
+      me.condition = 0
+      me.x = -48
+      me.y = -48
+      while me.bombcount > 0
+        me.delBomb()
+      me.direction = 0
+      socket.emit('update user', me)
+  )
+
   socket.on('change user', (pl) ->
     usergamemap.players[pl.id] = pl
-    if pl.id is me.id
-      control = -1
     drawWorld(usergamemap)
   )
 
@@ -137,7 +122,14 @@ do ($ = jQuery) -> $(document).ready(() ->
   )
 
   $(window).on('unload', (e) ->
-    socket.emit('leave', me)
+    clearInterval(intervalid)
+    me.condition = 0
+    me.x = -48
+    me.y = -48
+    while me.bombcount > 0
+      me.delBomb()
+    me.direction = 0
+    socket.emit('update user', me)
   )
 
   $("body").keydown((e) ->
@@ -145,7 +137,8 @@ do ($ = jQuery) -> $(document).ready(() ->
     if e.keyCode is 37 then me.direction = 2
     if e.keyCode is 38 then me.direction = 3
     if e.keyCode is 40 then me.direction = 4
-    if e.keyCode is 32 then meb = 1
+    if e.keyCode is 32 and me.bombcount < me.bombamount then meb = 1
+    if e.keyCode is 16 and me.bombcount > 0 and me.bombtype is 2 then meb2 = 1
   )
 
   $("body").keyup((e) ->
@@ -179,25 +172,42 @@ do ($ = jQuery) -> $(document).ready(() ->
         socket.emit('update world', usergamemap.map)
       if me.bombcount > 0
         for bomb in me.bombs
-          if bomb.time > 0 then bomb.time -= 1
-          else
-            bomb.BlockColl(usergamemap.map)
-            idarr = bomb.PlayerColl(usergamemap.players)
-            if idarr.length > 0
-              for id in idarr
-                socket.emit('leave', usergamemap.players[id])
-            me.delBomb()
-            me.bombcount--
-            socket.emit('update user', me)
-            socket.emit('update world', usergamemap.map)
-            drawWorld(usergamemap)
+          if me.bombtype is 1 or me.bombtype is 3
+            if bomb.time > 0 then bomb.time -= 1
+            else
+              bomb.BlockColl(usergamemap.map)
+              idarr = bomb.PlayerColl(usergamemap.players)
+              if idarr.length > 0
+                for id in idarr
+                  socket.emit('leave', usergamemap.players[id])
+              me.delBomb()
+              me.bombcount--
+              socket.emit('update user', me)
+              socket.emit('update world', usergamemap.map)
+              drawWorld(usergamemap)
+          if me.bombtype is 2
+            if bomb.time is 0
+              bomb.BlockColl(usergamemap.map)
+              idarr = bomb.PlayerColl(usergamemap.players)
+              if idarr.length > 0
+                for id in idarr
+                  socket.emit('leave', id)
+              me.delBomb()
+              me.bombcount--
+              socket.emit('update user', me)
+              socket.emit('update world', usergamemap.map)
+              drawWorld(usergamemap)
       if meb is 1
         bomb = new Bomb(me.bombtype, me.x, me.y, 30, me.bombpwr)
-        bomb.BombPlace(usergamemap.players)
+        bomb.BombPlace(usergamemap.players )
         me.addBomb(bomb)
         meb = 0
         me.bombcount++
-      if me.direction > 0 or meb > 0 or me.bombcount > 0
+      if meb2 is 1
+        if me.bombs.length > 0
+          me.bombs[0].time = 0
+        meb2 = 0
+      if me.direction > 0 or meb > 0
         if mvup is 1 then me.direction = 0
         socket.emit('update user', me)
         drawWorld(usergamemap)

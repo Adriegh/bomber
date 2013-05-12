@@ -73,27 +73,22 @@ io.sockets.on('connection' , (socket) ->
   )
   ###
 
-  socket.on('new user', (player) ->
-    if arrpid.length > 0
-      player.id = arrpid[0]
-      arrpid.splice(0,1)
-    else
-      player.id = pid
-      pid++
+  socket.on('new user', (player ) ->
+    player.id = pid
+    pid++
     gamemap.addPlayer(player)
     socket.emit('add world', gamemap, player.id)
     socket.broadcast.emit('add user', player)
   )
 
-  socket.on('leave', (player) ->
-    arrpid.push(player.id)
-    gamemap.delPlayer(player)
-    socket.emit('change user', player)
-    socket.broadcast.emit('change user', player)
+  socket.on('leave', (id) ->
+    socket.emit('delete user', id)
+    socket.broadcast.emit('delete user', id)
   )
 
   socket.on('update user', (player) ->
     gamemap.addPlayer(player)
+    socket.emit('change user', player)
     socket.broadcast.emit('change user', player)
   )
 
