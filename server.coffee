@@ -19,24 +19,13 @@ app.listen 12345
 #  END server routine
 
 model = require('./js/model.js') # loading common model for game
+jsonfile = require('./json/maps.json')
+ind = Math.ceil(Math.random()*3)
 
-testmap = [
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-            [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1]
-            [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1]
-            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1]
-            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1]
-            [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1]
-            [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1]
-            [1,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0,1,1,1,1,1]
-            [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1]
-            [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1]
-            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1]
-            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1]
-            [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1]
-            [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1]
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-          ]
+if ind is 1 then testmap = jsonfile.map1
+else if ind is 2 then testmap = jsonfile.map2
+else if ind is 3 then testmap = jsonfile.map3
+
 
 createBlocks = (testmap) ->
   for Btype in testmap
@@ -56,9 +45,14 @@ createBlocks = (testmap) ->
 pid = 0
 arrpid = []
 count = 0
+gamescore = 0
 gamemap = new model.World()
 createBlocks(testmap)
+gamemap.type = Math.ceil(Math.random()*3)
 gamemap.addMap(testmap)
+
+console.log ind
+console.log gamemap.type
 
 io.sockets.on('connection' , (socket) ->
 
@@ -76,6 +70,7 @@ io.sockets.on('connection' , (socket) ->
   socket.on('new user', (player ) ->
     player.id = pid
     pid++
+    gamescore += 10
     gamemap.addPlayer(player)
     socket.emit('add world', gamemap, player.id)
     socket.broadcast.emit('add user', player)
@@ -84,6 +79,10 @@ io.sockets.on('connection' , (socket) ->
   socket.on('leave', (id) ->
     socket.emit('delete user', id)
     socket.broadcast.emit('delete user', id)
+  )
+
+  socket.on('hi',(hi) ->
+    console.log "wassup"
   )
 
   socket.on('update user', (player) ->

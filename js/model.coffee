@@ -1,20 +1,22 @@
 class Player
-  constructor: (name, x, y, id, condition, direction, bombcount, bombtype, bombpwr, bombamount ,bombs) ->
+  constructor: (name, x, y, id, skin, bombtype, bombpwr, bombamount, mspeed) ->
     @name = name
     @x = x
     @y = y
     @id = id
-    @condition = condition
-    @direction = direction
-    @bombcount = bombcount
+    @skin = skin
+    @condition = 1
+    @direction = 0
+    @score = 0
+    @mspeed = mspeed
     @bombtype = bombtype
     @bombpwr = bombpwr
     @bombamount = bombamount
-    @bombs = bombs
+    @bombs = []
   addBomb: (b) ->
     @bombs.push(b)
-  delBomb: () ->
-    @bombs.splice(0,1)
+  delBomb: (id) ->
+    @bombs.splice(id,1)
   BoundColl: ( x, y, map) ->
     XColl = false
     YColl = false
@@ -28,6 +30,54 @@ class Player
       if y < 48*Math.ceil(y/48)+48 and y+48 > 48*Math.ceil(y/48) then YColl = true
     if (XColl and YColl) then return false
     return true
+  BonusCheck: (map, ox, oy) ->
+    tx = 0
+    ty = 0
+    if @x % 48 > 23 and @y % 48 > 23
+      tx = Math.ceil(@x / 48)
+      ty = Math.ceil(@y / 48)
+    else if @x % 48 > 23
+      tx = Math.ceil(@x / 48)
+      ty = Math.floor(@y / 48)
+    else if @y % 48 > 23
+      tx = Math.floor(@x / 48)
+      ty = Math.ceil(@y / 48)
+    else
+      tx = Math.floor(@x / 48)
+      ty = Math.floor(@y / 48)
+
+    if 3 < map[ ty][ tx ] < 9
+      if map[ ty][ tx ] is 4 then @bombamount++
+      if map[ ty][ tx ] is 5
+        dif = 0
+        if @mspeed is 4
+          @mspeed = 8
+          if @x % 8 isnt 0 then dif = 4
+          else dif = 0
+        else if @mspeed is 8
+          @mspeed = 12
+          if @x % 12 isnt 0 then dif = 4
+          else dif = 0
+        else if @mspeed is 12
+          @mspeed = 24
+          if @x % 24 isnt 0 then dif = 12
+          else dif = 0
+        else if @mspeed is 24
+          @mspeed = 48
+          if @x % 12 isnt 0 then dif = 24
+          else dif = 0
+        else if @mspeed is 48 then dif = 0
+
+        if ox < @x then @x += dif
+        else if ox > @x then @x -= dif
+        if oy < @y then @y += dif
+        else if oy > @y then @y -= dif
+
+      if map[ ty][ tx ] is 6 then @bombpwr++
+      if map[ ty][ tx ] is 7 then @bombtype = 2
+      if map[ ty][ tx ] is 8 then @bombtype = 3
+      map[ ty][ tx ] = 0
+      return true
 
 class Bomb
   constructor: (type, x, y, time, frpwr) ->
@@ -36,55 +86,100 @@ class Bomb
     @y = y
     @time = time
     @frpwr = frpwr
-  BlockColl: (map) ->
-    if 1 < map[ Math.floor(@y/48) ][ Math.floor(@x/48) ] < 4
-      map[ Math.floor(@y/48) ][ Math.floor(@x/48) ] = 0
-    bfrpwr = 1
-    while bfrpwr < @frpwr+1
-      if 0 < map[ Math.floor(@y/48) ][ Math.floor((@x-(48*bfrpwr))/48) ] < 4
-        if 1 < map[ Math.floor(@y/48) ][ Math.floor((@x-(48*bfrpwr))/48) ] < 4
-          map[ Math.floor(@y/48) ][ Math.floor((@x-(48*bfrpwr))/48) ] = 0
-          if @type isnt 3 then break
-        if map[ Math.floor(@y/48) ][ Math.floor((@x-(48*bfrpwr))/48) ] is 1 then break
-      bfrpwr++
-
-    bfrpwr = 1
-    while bfrpwr < @frpwr+1
-      if 0 < map[ Math.floor(@y/48) ][ Math.floor((@x+(48*bfrpwr))/48) ] < 4
-        if  1 < map[ Math.floor(@y/48) ][ Math.floor((@x+(48*bfrpwr))/48) ] < 4
-          map[ Math.floor(@y/48) ][ Math.floor((@x+(48*bfrpwr))/48) ] = 0
-          if @type isnt 3 then break
-        if  map[ Math.floor(@y/48) ][ Math.floor((@x+(48*bfrpwr))/48) ] is 1 then break
-      bfrpwr++
-
-    bfrpwr = 1
-    while bfrpwr < @frpwr+1
-      if 0 < map[ Math.floor((@y-(48*bfrpwr))/48) ][ Math.floor(@x/48) ] < 4
-        if 1 < map[ Math.floor((@y-(48*bfrpwr))/48) ][ Math.floor(@x/48) ] < 4
-          map[ Math.floor((@y-(48*bfrpwr))/48) ][ Math.floor(@x/48) ] = 0
-          if @type isnt 3 then break
-        if map[ Math.floor((@y-(48*bfrpwr))/48) ][ Math.floor(@x/48) ] is 1 then break
-      bfrpwr++
-
-    bfrpwr = 1
-    while bfrpwr < @frpwr+1
-      if 0 < map[ Math.floor((@y+(48*bfrpwr))/48) ][ Math.floor(@x/48) ] < 4
-        if 1 < map[ Math.floor((@y+(48*bfrpwr))/48) ][ Math.floor(@x/48) ] < 4
-          map[ Math.floor((@y+(48*bfrpwr))/48) ][ Math.floor(@x/48) ] = 0
-          if @type isnt 3 then break
-        if map[ Math.floor((@y+(48*bfrpwr))/48) ][ Math.floor(@x/48) ] is 1 then break
-      bfrpwr++
-
-  PlayerColl: (players) ->
+    @blowmap = [0,0,0,0]
+    @cond = 1
+  BlockColl: (map, players) ->
     blow = []
-    for pl in players
-      if ( pl.x+48 > @x and pl.x < @x+48 ) and ( pl.y+48 > @y and pl.y < @y+48 ) then blow.push(pl.id)
-      if ( pl.x+48 > @x-48 and pl.x < @x ) and ( pl.y+48 > @y and pl.y < @y+48 ) then blow.push(pl.id)
-      if ( pl.x+48 > @x+48 and pl.x < @x+96 ) and ( pl.y+48 > @y and pl.y < @y+48 ) then blow.push(pl.id)
-      if ( pl.x+48 > @x and pl.x < @x+48 ) and ( pl.y+48 > @y-48 and pl.y < @y ) then blow.push(pl.id)
-      if ( pl.x+48 > @x and pl.x < @x+48 ) and ( pl.y+48 > @y+48 and pl.y < @y+96 ) then blow.push(pl.id)
+    if 1 < map[ Math.floor(@y/48) ][ Math.floor(@x/48) ] < 9
+      map[ Math.floor(@y/48) ][ Math.floor(@x/48) ] = 0
+
+    bfrpwr = 1
+    while bfrpwr < @frpwr+1
+      if 0 < map[ Math.floor(@y/48) ][ Math.floor((@x-(48*bfrpwr))/48) ] < 9
+        if 1 < map[ Math.floor(@y/48) ][ Math.floor((@x-(48*bfrpwr))/48) ] < 9
+          if map[ Math.floor(@y/48) ][ Math.floor((@x-(48*bfrpwr))/48) ] is 3
+            block = Math.ceil(Math.random()*5)+3
+            map[ Math.floor(@y/48) ][ Math.floor((@x-(48*bfrpwr))/48) ] = block
+          else
+            map[ Math.floor(@y/48) ][ Math.floor((@x-(48*bfrpwr))/48) ] = 0
+          @blowmap[0]++
+          if @type isnt 3 then break
+          else if @type is 3 then @blowmap[0]--
+        if map[ Math.floor(@y/48) ][ Math.floor((@x-(48*bfrpwr))/48) ] is 1 then break
+      else if map[ Math.floor(@y/48) ][ Math.floor((@x-(48*bfrpwr))/48) ] is 0
+        for pl in players
+          if ( pl.x+48 > @x-(48*bfrpwr) and pl.x < @x+48-(48*bfrpwr) ) and ( pl.y+48 > @y and pl.y < @y+48 )
+            blow.push pl
+          i = 0
+          for bomb in pl.bombs
+            if bomb.x is @x-48*bfrpwr and bomb.y is @y
+              players[pl.id].bombs[i].type = 1
+            i++
+      bfrpwr++
+      @blowmap[0]++
+
+    bfrpwr = 1
+    while bfrpwr < @frpwr+1
+      if 0 < map[ Math.floor(@y/48) ][ Math.floor((@x+(48*bfrpwr))/48) ] < 9
+        if  1 < map[ Math.floor(@y/48) ][ Math.floor((@x+(48*bfrpwr))/48) ] < 9
+          if  map[ Math.floor(@y/48) ][ Math.floor((@x+(48*bfrpwr))/48) ] is 3
+            block = Math.ceil(Math.random()*5)+3
+            map[ Math.floor(@y/48) ][ Math.floor((@x+(48*bfrpwr))/48) ] = block
+          else
+            map[ Math.floor(@y/48) ][ Math.floor((@x+(48*bfrpwr))/48) ] = 0
+          @blowmap[1]++
+          if @type isnt 3 then break
+          else if @type is 3 then @blowmap[1]--
+        if  map[ Math.floor(@y/48) ][ Math.floor((@x+(48*bfrpwr))/48) ] is 1 then break
+      else if map[ Math.floor(@y/48) ][ Math.floor((@x+(48*bfrpwr))/48) ] is 0
+        for pl in players
+          if ( pl.x+48 > @x+(48*bfrpwr) and pl.x < @x+48+(48*bfrpwr) ) and ( pl.y+48 > @y and pl.y < @y+48 )
+            blow.push(pl.id)
+      bfrpwr++
+      @blowmap[1]++
+
+    bfrpwr = 1
+    while bfrpwr < @frpwr+1
+      if 0 < map[ Math.floor((@y-(48*bfrpwr))/48) ][ Math.floor(@x/48) ] < 9
+        if 1 < map[ Math.floor((@y-(48*bfrpwr))/48) ][ Math.floor(@x/48) ] < 9
+          if map[ Math.floor((@y-(48*bfrpwr))/48) ][ Math.floor(@x/48) ] is 3
+            block = Math.ceil(Math.random()*5)+3
+            map[ Math.floor((@y-(48*bfrpwr))/48) ][ Math.floor(@x/48) ] = block
+          else
+            map[ Math.floor((@y-(48*bfrpwr))/48) ][ Math.floor(@x/48) ] = 0
+          @blowmap[2]++
+          if @type isnt 3 then break
+          else if @type is 3 then @blowmap[2]--
+        if map[ Math.floor((@y-(48*bfrpwr))/48) ][ Math.floor(@x/48) ] is 1 then break
+      else if map[ Math.floor((@y-(48*bfrpwr))/48) ][ Math.floor(@x/48) ] is 0
+        for pl in players
+          if ( pl.x+48 > @x and pl.x < @x+48 ) and ( pl.y+48 > @y-(48*bfrpwr) and pl.y < @y+48-(48*bfrpwr) )
+            blow.push(pl.id)
+      bfrpwr++
+      @blowmap[2]++
+
+    bfrpwr = 1
+    while bfrpwr < @frpwr+1
+      if 0 < map[ Math.floor((@y+(48*bfrpwr))/48) ][ Math.floor(@x/48) ] < 9
+        if 1 < map[ Math.floor((@y+(48*bfrpwr))/48) ][ Math.floor(@x/48) ] < 9
+          if map[ Math.floor((@y+(48*bfrpwr))/48) ][ Math.floor(@x/48) ] is 3
+            block = Math.ceil(Math.random()*5)+3
+            map[ Math.floor((@y+(48*bfrpwr))/48) ][ Math.floor(@x/48) ] = block
+          else
+            map[ Math.floor((@y+(48*bfrpwr))/48) ][ Math.floor(@x/48) ] = 0
+          @blowmap[3]++
+          if @type isnt 3 then break
+          else if @type is 3 then @blowmap[3]--
+        if map[ Math.floor((@y+(48*bfrpwr))/48) ][ Math.floor(@x/48) ] is 1 then break
+      else if map[ Math.floor((@y+(48*bfrpwr))/48) ][ Math.floor(@x/48) ] is 0
+        for pl in players
+          if ( pl.x+48 > @x and pl.x < @x+48 ) and ( pl.y+48 > @y+(48*bfrpwr) and pl.y < @y+48+(48*bfrpwr) )
+            blow.push(pl.id)
+      bfrpwr++
+      @blowmap[3]++
+
     return blow
-  BombPlace: (players) ->
+  BombPlace: () ->
     if @x % 48 > 23 and @y % 48 > 23
       @x = Math.ceil(@x / 48)*48
       @y = Math.ceil(@y / 48)*48
@@ -97,12 +192,16 @@ class Bomb
     else
       @x = Math.floor(@x / 48)*48
       @y = Math.floor(@y / 48)*48
+
+  Checkbombs: (players) ->
+    Coll = false
     for pl in players
       if pl.bombs.length > 0
         for bomb in pl.bombs
           if @x is bomb.x and @y is bomb.y
-            @x=-96
-            @y=-96
+            Coll = true
+            break
+    return Coll
 
 class Block
   constructor: (material, blx, bly, id) ->
@@ -118,10 +217,12 @@ class World
         @players = obj.players
         @map = obj.map
         @blocks = obj.blocks
+        @type - obj.type
       else
         @players = []
         @map = [[]]
         @blocks = []
+        @type = 0
   addMap: (map) ->
     @map = map
   addPlayer: (pl) ->
@@ -130,7 +231,6 @@ class World
     pl.x = -48
     pl.y = -48
     pl.bombs = []
-    pl.bombcount = 0
     pl.direction = 0
   addBlock: (bl) ->
     @blocks[bl.id]=bl
