@@ -49,29 +49,25 @@ class Player
     if 3 < map[ ty][ tx ] < 9
       if map[ ty][ tx ] is 4 then @bombamount++
       if map[ ty][ tx ] is 5
-        dif = 0
+        difX = 0
+        difY = 0
         if @mspeed is 4
           @mspeed = 8
-          if @x % 8 isnt 0 then dif = 4
-          else dif = 0
+          if @x % 8 isnt 0 then difX = 4
+          if @y % 8 isnt 0 then difY = 4
         else if @mspeed is 8
           @mspeed = 12
-          if @x % 12 isnt 0 then dif = 4
-          else dif = 0
+          if @x % 12 isnt 0 then difX = 4
+          if @y % 12 isnt 0 then difY = 4
         else if @mspeed is 12
           @mspeed = 24
-          if @x % 24 isnt 0 then dif = 12
-          else dif = 0
-        else if @mspeed is 24
-          @mspeed = 48
-          if @x % 12 isnt 0 then dif = 24
-          else dif = 0
-        else if @mspeed is 48 then dif = 0
+          if @x % 24 isnt 0 then difX = 12
+          if @y % 24 isnt 0 then difY = 4
 
-        if ox < @x then @x += dif
-        else if ox > @x then @x -= dif
-        if oy < @y then @y += dif
-        else if oy > @y then @y -= dif
+        if ox < @x then @x += difX
+        if ox > @x then @x -= difX
+        if oy < @y then @y += difY
+        if oy > @y then @y -= difY
 
       if map[ ty][ tx ] is 6 then @bombpwr++
       if map[ ty][ tx ] is 7 then @bombtype = 2
@@ -113,7 +109,7 @@ class Bomb
           i = 0
           for bomb in pl.bombs
             if bomb.x is @x-48*bfrpwr and bomb.y is @y
-              players[pl.id].bombs[i].type = 1
+              players[pl.id].bombs[i].type = 3
             i++
       bfrpwr++
       @blowmap[0]++

@@ -93,8 +93,8 @@ do ($ = jQuery) -> $(document).ready(() ->
   control = 0
   intervalid = 0
 
-  me = new Player("P#{1}", -48, -48, 0, Math.ceil(Math.random()*5)-1, 2, 1, 2, 8)
-                 # name     x    y  id  sk bt bp ba ms
+  me = new Player("P#{1}", -48, -48, 0, Math.ceil(Math.random()*5)-1, 2, 1, 2, 4)
+                 # name     x    y  id                sk             bt bp ba ms
 
   stdir = [[197, 49+(64*me.skin), 0, 0]]
 
@@ -162,7 +162,7 @@ do ($ = jQuery) -> $(document).ready(() ->
     if me.x < 0
       alert "Room is full. You will be disconnected."
       socket.emit('leave', me.id)
-    intervalid = setInterval(movePl, 150)
+    intervalid = setInterval(movePl, 50)
   )
 
   socket.on('add user', (pl) ->
@@ -268,7 +268,7 @@ do ($ = jQuery) -> $(document).ready(() ->
                 socket.emit('update world', usergamemap.map)
                 drawWorld(usergamemap)
       if meb is 1
-        bomb = new Bomb(me.bombtype, me.x, me.y, 30, me.bombpwr)
+        bomb = new Bomb(me.bombtype, me.x, me.y, 90, me.bombpwr)
         bomb.BombPlace()
         if bomb.Checkbombs(usergamemap.players )
           me.addBomb(bomb)
