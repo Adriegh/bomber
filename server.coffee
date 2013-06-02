@@ -35,7 +35,7 @@ createBlocks = (testmap) ->
         stype = Math.ceil(Math.random()*3)
         if stype > 1
           if stype is 3
-            if Math.ceil(Math.random()*4) isnt 1 then stype = 2
+            if Math.ceil(Math.random()*2) isnt 1 then stype = 2
         else stype = 0
         type = stype
       Btype[x] = type
@@ -76,14 +76,16 @@ io.sockets.on('connection' , (socket) ->
     socket.broadcast.emit('add user', player)
   )
 
+  socket.on('explosion', (players) ->
+    socket.emit('change bombs', players)
+    socket.broadcast.emit('change bombs', players)
+  )
+
   socket.on('leave', (id) ->
     socket.emit('delete user', id)
     socket.broadcast.emit('delete user', id)
   )
 
-  socket.on('hi',(hi) ->
-    console.log "wassup"
-  )
 
   socket.on('update user', (player) ->
     gamemap.addPlayer(player)

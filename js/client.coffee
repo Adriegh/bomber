@@ -58,29 +58,29 @@ do ($ = jQuery) -> $(document).ready(() ->
           stdir[pl.id][3] = 0
         else stdir[pl.id][3]++
         if pl.direction is 0
-          ctx.drawImage(imgSpr, stdir[pl.id][0], stdir[pl.id][1], 48, 64, pl.x, pl.y-16, 48, 64)
+          ctx.drawImage(imgSpr, stdir[pl.id][0], stdir[pl.id][1], 48, 64, pl.x, pl.y-20, 48, 64)
           #ctx.drawImage(imgSpr, 49, 49, 24, 24, pl.x-26, pl.y-32, 24, 24)
           #ctx.fillText(pl.name, pl.x-22, pl.y-24)
         if pl.direction is 1
-          ctx.drawImage(imgSpr, 391+(48*stdir[pl.id][2]), 49+(64*pl.skin), 48, 64, pl.x, pl.y-16, 48, 64)
+          ctx.drawImage(imgSpr, 391+(48*stdir[pl.id][2]), 49+(64*pl.skin), 48, 64, pl.x, pl.y-20, 48, 64)
           #ctx.drawImage(imgSpr, 49, 49, 24, 24, pl.x-26, pl.y-32, 24, 24)
           #ctx.fillText(pl.name, pl.x-22, pl.y-24)
           stdir[pl.id][0] = 391+48*stdir[pl.id][2]
           stdir[pl.id][1] = 49+(64*pl.skin)
         if pl.direction is 2
-          ctx.drawImage(imgSpr, 291+(48*stdir[pl.id][2]), 49+(64*pl.skin), 48, 64, pl.x, pl.y-16, 48, 64)
+          ctx.drawImage(imgSpr, 291+(48*stdir[pl.id][2]), 49+(64*pl.skin), 48, 64, pl.x, pl.y-20, 48, 64)
           #ctx.drawImage(imgSpr, 49, 49, 24, 24, pl.x-26, pl.y-32, 24, 24)
           #ctx.fillText(pl.name, pl.x-22, pl.y-24)
           stdir[pl.id][0] = 291+48*stdir[pl.id][2]
           stdir[pl.id][1] = 49+(64*pl.skin)
         if pl.direction is 3
-          ctx.drawImage(imgSpr, 103+(48*stdir[pl.id][2]), 49+(64*pl.skin), 48, 64, pl.x, pl.y-16, 48, 64)
+          ctx.drawImage(imgSpr, 103+(48*stdir[pl.id][2]), 49+(64*pl.skin), 48, 64, pl.x, pl.y-20, 48, 64)
           #ctx.drawImage(imgSpr, 49, 49, 24, 24, pl.x-26, pl.y-32, 24, 24)
           #ctx.fillText(pl.name, pl.x-22, pl.y-24)
           stdir[pl.id][0] = 103+48*stdir[pl.id][2]
           stdir[pl.id][1] = 49+(64*pl.skin)
         if pl.direction is 4
-          ctx.drawImage(imgSpr, 197+(48*stdir[pl.id][2]), 49+(64*pl.skin), 48, 64, pl.x, pl.y-16, 48, 64)
+          ctx.drawImage(imgSpr, 197+(48*stdir[pl.id][2]), 49+(64*pl.skin), 48, 64, pl.x, pl.y-20, 48, 64)
           #ctx.drawImage(imgSpr, 49, 49, 24, 24, pl.x-26, pl.y-32, 24, 24)
           #ctx.fillText(pl.name, pl.x-22, pl.y-24)
           stdir[pl.id][0] = 197+48*stdir[pl.id][2]
@@ -94,7 +94,7 @@ do ($ = jQuery) -> $(document).ready(() ->
   intervalid = 0
 
   me = new Player("P#{1}", -48, -48, 0, Math.ceil(Math.random()*5)-1, 2, 1, 2, 4)
-                 # name     x    y  id                sk             bt bp ba ms
+                 # name     x    y  id              sk               bt bp ba ms
 
   stdir = [[197, 49+(64*me.skin), 0, 0]]
 
@@ -162,7 +162,7 @@ do ($ = jQuery) -> $(document).ready(() ->
     if me.x < 0
       alert "Room is full. You will be disconnected."
       socket.emit('leave', me.id)
-    intervalid = setInterval(movePl, 50)
+    intervalid = setInterval(movePl, 50) #150
   )
 
   socket.on('add user', (pl) ->
@@ -190,6 +190,15 @@ do ($ = jQuery) -> $(document).ready(() ->
 
   socket.on('change world', (gmap) ->
     usergamemap.map = gmap
+    drawWorld(usergamemap)
+  )
+
+  socket.on('change bombs', (players) ->
+    for pl in players
+      if pl.id is me.id
+        for idbomb in [0..pl.bombs.length]
+          if me.bombs[idbomb].trig isnt pl.bombs[idbomb].trig then me.bombs[idbomb].time = 0
+      socket.emit('update user', me)
     drawWorld(usergamemap)
   )
 
@@ -240,6 +249,7 @@ do ($ = jQuery) -> $(document).ready(() ->
                 for id in idarr
                   socket.emit('leave', id)
                   me.score += 10
+              socket.emit('explosion', usergamemap.players)
               me.bombs[idbomb].time--
             if me.bombs[idbomb].time < 0
               me.bombs[idbomb].time--
@@ -257,6 +267,7 @@ do ($ = jQuery) -> $(document).ready(() ->
                 for id in idarr
                   socket.emit('leave', id)
                   me.score += 10
+              socket.emit('explosion', usergamemap.players)
               me.bombs[idbomb].time--
             if me.bombs[idbomb].time < 0
               me.bombs[idbomb].time--
