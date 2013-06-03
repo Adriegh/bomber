@@ -8,10 +8,6 @@
     <title>BomberWorld</title>
     <link rel="shortcut icon" href="/img/favicon.png" type="image/png">
 
-    <!-- canvas -->
-    <canvas id="canvas" width="1008" height="720" style="border:1px solid #000000;"></canvas>
-    <canvas id="canvasbar" width="64" height="720" style="border:1px solid #000000;"></canvas>
-
     <!-- libs -->
     <script src="socket.io/socket.io.js"></script>
     <script src="js/jquery.js"></script>
@@ -19,11 +15,35 @@
     <!-- project files -->
     <script src="js/model.js"></script>
     <script src="js/client.js"></script>
+
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
 </head>
 <body>
 
-<div class="container-narrow">
+<div class="container-login hidden">
+    <div class="container">
+        <div class="row">
+            <fieldset class="span5 offset4" style="margin-top: 100px">
+                <div class="control-group">
+                    <legend>Авторизуйтесь в игре</legend>
+                    <div class="controls">
+                        <input type="text" class="username span5" name="username" value="" placeholder="Ваше имя" />
+                    </div>
+                    <div class="controls">
+                        <input type="password" class="password span5" name="password" value="" placeholder="Пароль" />
+                    </div>
+                    <input type="submit" class="login btn btn-primary" value="Войти" />
+                    <input type="submit" class="register btn" value="Зарегистрироваться" />
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>
+
+<div class="container-narrow hidden">
+    <canvas id="canvas" width="1008" height="720" style="border:1px solid #000000;"></canvas>
+    <canvas id="canvasbar" width="64" height="720" style="border:1px solid #000000;"></canvas>
 </div>
 
 </body>

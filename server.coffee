@@ -1,6 +1,15 @@
 # BEGIN server routine
 
+mysql = require('mysql');
 fs = require('fs')
+connection = mysql.createConnection({
+  host     : 'localhost',
+  user     : 'root',
+  password : '',
+  database: 'bomber',
+});
+connection.connect();
+
 app = require('http').createServer (req, res) ->
   page = if req.url is '/' then '/index.html' else req.url
   fs.readFile(
@@ -66,6 +75,14 @@ io.sockets.on('connection' , (socket) ->
       socket.emit('response', "deny")
   )
   ###
+
+  socket.on('register', (data) ->
+    error = false
+    connection.query('SELECT * FROM users WHERE username = "'  + connection.escape(data['username']) + '"', (err, results) ->
+      if(results.count > 0)
+        error = true
+      )
+    )
 
   socket.on('new user', (player ) ->
     player.id = pid

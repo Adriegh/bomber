@@ -15,6 +15,18 @@ do ($ = jQuery) -> $(document).ready(() ->
   imgBlow = new Image()
   imgBlow.src = 'img\\spriteBlow.png'
 
+  authorize = (() ->
+    $('.container-login').show();
+    $('.container-login .register').on('click', () ->
+      data = {
+        username: $('.container-login .username').val(),
+        password: $('.container-login .password').val(),
+      }
+
+      socket.emit('register', data)
+    )
+  )
+
   drawWorld = (map) ->
     canva = document.getElementById("canvas")
     ctx = canva.getContext("2d")
@@ -86,6 +98,8 @@ do ($ = jQuery) -> $(document).ready(() ->
           stdir[pl.id][0] = 197+48*stdir[pl.id][2]
           stdir[pl.id][1] = 49+(64*pl.skin)
 
+
+
   usergamemap = new World()
   mvup = 0
   meb = 0
@@ -112,7 +126,9 @@ do ($ = jQuery) -> $(document).ready(() ->
   )
   ###
 
-  socket.emit('new user', me)
+  # socket.emit('new user', me)
+
+  authorize()
 
   socket.on('add world', (worldmap, newid) ->
     usergamemap = new World(worldmap)

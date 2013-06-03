@@ -3,3 +3,11 @@ div.player {
     border-radius: 5px;
     padding: 3px;
 }
+
+.container-login {
+
+}
+
+.hidden {
+    display: none;
+}
