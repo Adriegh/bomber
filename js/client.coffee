@@ -1,6 +1,8 @@
 do ($ = jQuery) -> $(document).ready(() ->
   socket = io.connect(document.URL.match(/^http:\/\/[^/]*/))
 
+  authorized = false
+
   imgSpr = new Image()
   imgSpr.src = 'img\\spritesBeta2.png'
   imgBack = new Image()
@@ -16,8 +18,27 @@ do ($ = jQuery) -> $(document).ready(() ->
   imgBlow.src = 'img\\spriteBlow.png'
 
   authorize = (() ->
+    authorized = false
     $('.container-login').show();
+
     $('.container-login .register').on('click', () ->
+      $('.container-login .error-message').hide()
+    )
+
+    $('.container-login .login').on('click', () ->
+      $('.container-login .error-message').hide()
+
+      data = {
+        username: $('.container-login .username').val(),
+        password: $('.container-login .password').val(),
+      }
+
+      socket.emit('login', data)
+    )
+
+    $('.container-login .register').on('click', () ->
+      $('.container-login .error-message').hide()
+
       data = {
         username: $('.container-login .username').val(),
         password: $('.container-login .password').val(),
@@ -99,18 +120,18 @@ do ($ = jQuery) -> $(document).ready(() ->
           stdir[pl.id][1] = 49+(64*pl.skin)
 
 
-
-  usergamemap = new World()
+  me = null
+  usergamemap = null
   mvup = 0
   meb = 0
   meb2 = 0
   control = 0
   intervalid = 0
 
-  me = new Player("P#{1}", -48, -48, 0, Math.ceil(Math.random()*5)-1, 2, 1, 2, 4)
+
                  # name     x    y  id              sk               bt bp ba ms
 
-  stdir = [[197, 49+(64*me.skin), 0, 0]]
+  stdir = null
 
   ###
   socket.emit('try_con', me)
@@ -129,6 +150,30 @@ do ($ = jQuery) -> $(document).ready(() ->
   # socket.emit('new user', me)
 
   authorize()
+
+  socket.on('registration failed', (error) ->
+    if( ! authorized)
+      $('.container-login .error-message').text(error).show()
+  )
+
+  socket.on('login failed', () ->
+    if( ! authorized)
+      $('.container-login .error-message').text("Не удалось войти").show()
+  )
+
+  socket.on('login successful', (data) ->
+    authorized = true
+
+    $('.container-login').hide();
+    $('.container-narrow').show();
+
+    usergamemap = new World()
+    console.log(data["username"])
+    me = new Player(data["username"], -48, -48, 0, Math.ceil(Math.random()*5)-1, 2, 1, 2, 4)
+    stdir = [[197, 49+(64*me.skin), 0, 0]]
+
+    socket.emit('new user', me)
+  )
 
   socket.on('add world', (worldmap, newid) ->
     usergamemap = new World(worldmap)

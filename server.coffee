@@ -1,14 +1,7 @@
 # BEGIN server routine
 
-mysql = require('mysql');
+mongodb = require('mongodb')
 fs = require('fs')
-connection = mysql.createConnection({
-  host     : 'localhost',
-  user     : 'root',
-  password : '',
-  database: 'bomber',
-});
-connection.connect();
 
 app = require('http').createServer (req, res) ->
   page = if req.url is '/' then '/index.html' else req.url
@@ -35,6 +28,8 @@ if ind is 1 then testmap = jsonfile.map1
 else if ind is 2 then testmap = jsonfile.map2
 else if ind is 3 then testmap = jsonfile.map3
 
+encryptPassword = (password) ->
+  require('crypto').createHash('sha1').update(password).digest("hex")
 
 createBlocks = (testmap) ->
   for Btype in testmap
@@ -49,7 +44,6 @@ createBlocks = (testmap) ->
         type = stype
       Btype[x] = type
       x++
-
 
 pid = 0
 arrpid = []
@@ -78,13 +72,49 @@ io.sockets.on('connection' , (socket) ->
 
   socket.on('register', (data) ->
     error = false
-    connection.query('SELECT * FROM users WHERE username = "'  + connection.escape(data['username']) + '"', (err, results) ->
-      if(results.count > 0)
-        error = true
+
+    if( ! error && data['username'].length < 2)
+      error = "Слишком короткое имя (укажите >2 символа)"
+
+    if( ! error && data['password'].length < 5)
+      error = "Слишком короткий пароль (укажите >4 символов)"
+
+    if( ! error)
+      new mongodb.Db('bomber', new mongodb.Server("127.0.0.1", 27017, {})).open((err, db) ->
+        db.createCollection('users', (err, col) ->
+          user = { 'username': data["username"], 'password': encryptPassword(data["password"]) }
+
+          col.findOne({'username': user['username']}, (err, res) ->
+            if(res != null)
+              error = "Пользователь с таким именем уже существует"
+
+            if( ! error)
+              col.insert(user)
+              socket.emit('login successful', user)
+            else
+              socket.emit('registration failed', error)
+          )
+        )
+      )
+    else
+      socket.emit('registration failed', error)
+  )
+
+  socket.on('login', (data) ->
+    new mongodb.Db('bomber', new mongodb.Server("127.0.0.1", 27017, {})).open((err, db) ->
+      db.createCollection('users', (err, col) ->
+        user = { 'username': data["username"], 'password': encryptPassword(data["password"]) }
+        col.findOne({'username': user['username']}, (err, res) ->
+          if(res == null || res["password"] != user["password"])
+            socket.emit('login failed')
+          else
+            socket.emit('login successful', user)
+        )
       )
     )
+  )
 
-  socket.on('new user', (player ) ->
+  socket.on('new user', (player) ->
     player.id = pid
     pid++
     gamescore += 10
