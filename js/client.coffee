@@ -167,8 +167,7 @@ do ($ = jQuery) -> $(document).ready(() ->
     $('.container-narrow').show();
 
     usergamemap = new World()
-    console.log(data["username"])
-    me = new Player(data["username"], -48, -48, 0, Math.ceil(Math.random()*5)-1, 2, 1, 2, 4)
+    me = new Player(data["username"], -48, -48, 0, $('.container-login .skin').val(), 2, 1, 2, 4)
     stdir = [[197, 49+(64*me.skin), 0, 0]]
 
     socket.emit('new user', me)
@@ -177,7 +176,6 @@ do ($ = jQuery) -> $(document).ready(() ->
   socket.on('add world', (worldmap, newid) ->
     usergamemap = new World(worldmap)
     me.id = newid
-    me.name = "P#{me.id + 1}"
     y = 0
     for line in usergamemap.map
       x = 0
