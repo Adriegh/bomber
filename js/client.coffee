@@ -73,10 +73,10 @@ do ($ = jQuery) -> $(document).ready(() ->
         for bomb in pl.bombs
           ctx.drawImage(imgSpr, 0, 49*bomb.type, 48, 48, bomb.x, bomb.y, 48, 48)
           if bomb.time <= 0
-            ctx.drawImage(imgSpr, 495, 0, 48*bomb.blowmap[1], 48, bomb.x+48, bomb.y, 48*bomb.blowmap[1], 48)
-            ctx.drawImage(imgSpr, 495, 0, 48*bomb.blowmap[0], 48, bomb.x-48*bomb.blowmap[0], bomb.y, 48*bomb.blowmap[0], 48)
-            ctx.drawImage(imgSpr, 495, 0, 48, 48*bomb.blowmap[3], bomb.x, bomb.y+48, 48, 48*bomb.blowmap[3])
-            ctx.drawImage(imgSpr, 495, 0, 48, 48*bomb.blowmap[2], bomb.x, bomb.y-48*bomb.blowmap[2], 48, 48*bomb.blowmap[2])
+            ctx.drawImage(imgSpr, 1079-48*bomb.blowmap[1], 0, 48*bomb.blowmap[1], 48, bomb.x+48, bomb.y, 48*bomb.blowmap[1], 48)
+            ctx.drawImage(imgSpr, 599, 48, 48*bomb.blowmap[0], 48, bomb.x-48*bomb.blowmap[0], bomb.y, 48*bomb.blowmap[0], 48)
+            ctx.drawImage(imgSpr, 495, 480-48*bomb.blowmap[3], 48, 48*bomb.blowmap[3], bomb.x, bomb.y+48, 48, 48*bomb.blowmap[3])
+            ctx.drawImage(imgSpr, 546, 0, 48, 48*bomb.blowmap[2], bomb.x, bomb.y-48*bomb.blowmap[2], 48, 48*bomb.blowmap[2])
     y = 0
     for Btype in map.map
       x = 0
@@ -127,7 +127,6 @@ do ($ = jQuery) -> $(document).ready(() ->
   meb2 = 0
   control = 0
   intervalid = 0
-
 
                  # name     x    y  id              sk               bt bp ba ms
 
@@ -193,11 +192,11 @@ do ($ = jQuery) -> $(document).ready(() ->
       if me.x > 0 then break
       y++
     if me.x > 0
-      bomb = new Bomb(me.bombtype, me.x, me.y-48, 0, 1)
+      bomb = new Bomb(me.bombtype, me.x, me.y, 0, 2)
       bomb.BlockColl(usergamemap.map, usergamemap.players)
       me.addBomb(bomb)
       me.delBomb(0)
-      bomb = new Bomb(me.bombtype, me.x, me.y-48, 0, 1)
+      bomb = new Bomb(me.bombtype, me.x, me.y, 0, 2)
       bomb.BlockColl(usergamemap.map, usergamemap.players)
       me.addBomb(bomb)
       me.delBomb(0)
@@ -258,10 +257,41 @@ do ($ = jQuery) -> $(document).ready(() ->
     for pl in players
       if pl.id is me.id
         for idbomb in [0..pl.bombs.length]
-          if me.bombs[idbomb].trig isnt pl.bombs[idbomb].trig then me.bombs[idbomb].time = 0
+          if me.bombs[idbomb].trig isnt pl.bombs[idbomb].trig
+            if me.bombs[idbomb].type is 2 then me.bombs[idbomb].time = 0
+            else me.bombs[idbomb].time = 1
       socket.emit('update user', me)
     drawWorld(usergamemap)
   )
+
+  ###
+  socket.on('round over', (winners, whos)->
+    if whos is "win"
+      if winners[0] is me.id
+        alert "YOU WON!!!"
+      else
+        alert "YOU LOSE..."
+
+    else if whos is "draw"
+      won = 0
+      for id in winners
+        if id is me.id
+          alert "YOU AND SOMEONE ELSE , WON!!!"
+          won = 1
+      if won is 0 then alert "YOU LOSE..."
+
+    else if whos is "no_one"
+      alert "ALL LOSE!!!"
+
+    mvup = 0
+    meb = 0
+    meb2 = 0
+    control = 0
+    intervalid = 0
+    me = new Player(me.name, -48, -48, me.id, me.skin, 1, 1, 1, 4)
+    socket.emit('new user', me)
+  )
+  ###
 
   $(window).on('unload', (e) ->
     clearInterval(intervalid)
@@ -302,7 +332,7 @@ do ($ = jQuery) -> $(document).ready(() ->
       if me.bombs.length > 0
         idbomblength = me.bombs.length
         for idbomb in [0...idbomblength]
-          if me.bombtype is 1 or me.bombtype is 3
+          if me.bombs[idbomb].type is 1 or me.bombs[idbomb].type is 3
             if me.bombs[idbomb].time > 0 then me.bombs[idbomb].time -= 1
             if me.bombs[idbomb].time is 0
               idarr = me.bombs[idbomb].BlockColl(usergamemap.map, usergamemap.players)
@@ -321,7 +351,7 @@ do ($ = jQuery) -> $(document).ready(() ->
                 socket.emit('update user', me)
                 socket.emit('update world', usergamemap.map)
                 drawWorld(usergamemap)
-          if me.bombtype is 2
+          if me.bombs[idbomb].type is 2
             if me.bombs[idbomb].time is 0
               idarr = me.bombs[idbomb].BlockColl(usergamemap.map, usergamemap.players)
               if idarr.length > 0

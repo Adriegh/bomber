@@ -48,7 +48,6 @@ createBlocks = (testmap) ->
 pid = 0
 arrpid = []
 count = 0
-gamescore = 0
 gamemap = new model.World()
 createBlocks(testmap)
 gamemap.type = Math.ceil(Math.random()*3)
@@ -56,6 +55,52 @@ gamemap.addMap(testmap)
 
 console.log ind
 console.log gamemap.type
+
+###
+launch
+launch = () ->
+  setInterval(winner, 10000) #180000
+winner = () ->
+  tscore = 0
+  winners = []
+  if gamemap.players.length > 0
+    for pl in gamemap.players
+      if pl.condition is 1
+        if pl.score > tscore
+          tscore = pl.score
+
+    for pl in gamemap.players
+      if pl.condition is 1
+        if pl.score is tscore
+          winners.push(pl.id)
+
+    if winners.length > 1
+      console.log "draw"
+      io.sockets.emit('round over', winners, "draw")
+    else if winners.length is 1
+      console.log "win"
+      io.sockets.emit('round over', winners, "win")
+    else if winners.length is 0
+      console.log "no_one"
+      io.sockets.emit('round over', winners, "no_one")
+
+  ind = Math.ceil(Math.random()*3)
+
+  if ind is 1 then testmap = jsonfile.map1
+  else if ind is 2 then testmap = jsonfile.map2
+  else if ind is 3 then testmap = jsonfile.map3
+
+  pid = 0
+  arrpid = []
+  count = 0
+  gamemap = new model.World()
+  createBlocks(testmap)
+  gamemap.type = Math.ceil(Math.random()*3)
+  gamemap.addMap(testmap)
+
+  console.log ind
+  console.log gamemap.type
+###
 
 io.sockets.on('connection' , (socket) ->
 
@@ -117,7 +162,6 @@ io.sockets.on('connection' , (socket) ->
   socket.on('new user', (player) ->
     player.id = pid
     pid++
-    gamescore += 10
     gamemap.addPlayer(player)
     socket.emit('add world', gamemap, player.id)
     socket.broadcast.emit('add user', player)
