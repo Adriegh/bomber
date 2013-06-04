@@ -40,7 +40,7 @@ class Player
       ty = Math.floor(@y / 48)
 
     if 3 < map[ ty][ tx ] < 9
-      if map[ ty][ tx ] is 4 then @bombamount++
+      if map[ ty][ tx ] is 4 and @bombamount < 5 then @bombamount++
       if map[ ty][ tx ] is 5
         difx = 0
         dify = 0
@@ -72,7 +72,7 @@ class Player
         if ox > @x then @x -= difx
         if oy < @y then @y += dify
         if oy > @y then @y -= dify
-      if map[ ty][ tx ] is 6 then @bombpwr++
+      if map[ ty][ tx ] is 6 and @bombpwr < 8 then @bombpwr++
       if map[ ty][ tx ] is 7 then @bombtype = 2
       if map[ ty][ tx ] is 8 then @bombtype = 3
       map[ ty][ tx ] = 0
@@ -107,7 +107,7 @@ class Bomb
           if @type isnt 3 then break
           else if @type is 3 then @blowmap[0]--
         if map[ Math.floor(@y/48) ][ Math.floor((@x-(48*bfrpwr))/48) ] is 1 then break
-      else if map[ Math.floor(@y/48) ][ Math.floor((@x-(48*bfrpwr))/48) ] is 0
+      else if map[ Math.floor(@y/48) ][ Math.floor((@x-(48*bfrpwr))/48) ] is 0 or map[ Math.floor(@y/48) ][ Math.floor((@x-(48*bfrpwr))/48) ] is -5
         for pl in players
           if ( pl.x+48 > @x-(48*bfrpwr) and pl.x < @x+48-(48*bfrpwr) ) and ( pl.y+48 > @y and pl.y < @y+48 )
             blow.push (pl.id)
@@ -132,7 +132,7 @@ class Bomb
           if @type isnt 3 then break
           else if @type is 3 then @blowmap[1]--
         if  map[ Math.floor(@y/48) ][ Math.floor((@x+(48*bfrpwr))/48) ] is 1 then break
-      else if map[ Math.floor(@y/48) ][ Math.floor((@x+(48*bfrpwr))/48) ] is 0
+      else if map[ Math.floor(@y/48) ][ Math.floor((@x+(48*bfrpwr))/48) ] is 0 or map[ Math.floor(@y/48) ][ Math.floor((@x+(48*bfrpwr))/48) ] is -5
         for pl in players
           if ( pl.x+48 > @x+(48*bfrpwr) and pl.x < @x+48+(48*bfrpwr) ) and ( pl.y+48 > @y and pl.y < @y+48 )
             blow.push(pl.id)
@@ -157,7 +157,7 @@ class Bomb
           if @type isnt 3 then break
           else if @type is 3 then @blowmap[2]--
         if map[ Math.floor((@y-(48*bfrpwr))/48) ][ Math.floor(@x/48) ] is 1 then break
-      else if map[ Math.floor((@y-(48*bfrpwr))/48) ][ Math.floor(@x/48) ] is 0
+      else if map[ Math.floor((@y-(48*bfrpwr))/48) ][ Math.floor(@x/48) ] is 0 or map[ Math.floor((@y-(48*bfrpwr))/48) ][ Math.floor(@x/48) ] is -5
         for pl in players
           if ( pl.x+48 > @x and pl.x < @x+48 ) and ( pl.y+48 > @y-(48*bfrpwr) and pl.y < @y+48-(48*bfrpwr) )
             blow.push(pl.id)
@@ -182,7 +182,7 @@ class Bomb
           if @type isnt 3 then break
           else if @type is 3 then @blowmap[3]--
         if map[ Math.floor((@y+(48*bfrpwr))/48) ][ Math.floor(@x/48) ] is 1 then break
-      else if map[ Math.floor((@y+(48*bfrpwr))/48) ][ Math.floor(@x/48) ] is 0
+      else if map[ Math.floor((@y+(48*bfrpwr))/48) ][ Math.floor(@x/48) ] is 0 or map[ Math.floor((@y+(48*bfrpwr))/48) ][ Math.floor(@x/48) ] is -5
         for pl in players
           if ( pl.x+48 > @x and pl.x < @x+48 ) and ( pl.y+48 > @y+(48*bfrpwr) and pl.y < @y+48+(48*bfrpwr) )
             blow.push(pl.id)
